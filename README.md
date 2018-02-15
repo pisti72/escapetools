@@ -1,0 +1,2 @@
+# escapetools
+Some javascript goodies
