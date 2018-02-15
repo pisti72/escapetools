@@ -1,0 +1,28 @@
+{
+  "name": "syncedcountdown",
+  "version": "0.1.0",
+  "description": "Two server controlled digital countdown extended with hint counter",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pisti72/escapetools.git"
+  },
+  "keywords": [
+    "nodejs",
+    "escaperoom",
+    "clock",
+    "time"
+  ],
+  "author": "Istvan Szalontai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pisti72/escapetools/issues"
+  },
+  "homepage": "https://github.com/pisti72/escapetools#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
