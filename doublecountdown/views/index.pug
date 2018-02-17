@@ -9,15 +9,35 @@ html
       h1= message
       p Please chose one:
       ul
-        li(onclick='fullscreen()') Switch to fullscreen
+        li(onclick='toggleFullscreen()') Switch to fullscreen
         li(onclick="lang('en')") Switch to English
         li(onclick="lang('hu')") Switch to Hungarian
-        li(onclick='start(1)') Start client A
-        li(onclick='start(2)') Start client B
+        li(onclick='client(1)') I am client 1
+        li(onclick='client(2)') I am client 2
+        li(onclick='start()') Start
+        li(onclick='pause()') Pause
         li(onclick='test()') Get my IP
       p(id='message')
     div(id='client' class='centered')
-      div(class='big') 00:00:00
+      table(width='80%',align='center')
+        tr
+          td(id='d5',class='digit') 0
+          td(id='d4',class='digit') 1
+          td(class='colon') :
+          td(id='d3',class='digit') 2
+          td(id='d2',class='digit') 3
+          td(class='colon') :
+          td(id='d1',class='digit') 4
+          td(id='d0',class='digit') 5
+        tr
+          td(colspan=4,class='hint') Used hints:
+          td(class='hint') 0
+          td(colspan=3)
+        tr
+          td(colspan=4,class='hint right') Opponent hints:
+          td(class='hint') 0
+          td(colspan=3)
+//-
+      div(class='big',id='clock') 00:00:00
       div(class='mid') Hints: 0
       div(class='mid') Opponent hints: 0
-
