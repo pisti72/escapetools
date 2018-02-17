@@ -3,7 +3,21 @@ html
   head
     title= title
     link(rel='stylesheet', href='/style.css')
+    script(src='/functions.js')
   body
-    h1= message
-    p majom
-    <p>hello</p>
+    div(id='server')
+      h1= message
+      p Please chose one:
+      ul
+        li(onclick='fullscreen()') Switch to fullscreen
+        li(onclick="lang('en')") Switch to English
+        li(onclick="lang('hu')") Switch to Hungarian
+        li(onclick='start(1)') Start client A
+        li(onclick='start(2)') Start client B
+        li(onclick='test()') Get my IP
+      p(id='message')
+    div(id='client' class='centered')
+      div(class='big') 00:00:00
+      div(class='mid') Hints: 0
+      div(class='mid') Opponent hints: 0
+

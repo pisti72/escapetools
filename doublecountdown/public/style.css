@@ -1,4 +1,20 @@
+@font-face {
+    font-family: digital7;
+    src: url("fonts/digital-7 (italic).ttf");
+}
+
 body{
+    font-family: digital7;
     background-color: black;
     color: yellow;
+    letter-spacing: 3px;
+}
+
+li{
+    margin: 5px;
+    cursor: pointer;
+}
+
+#client{
+    display: none;
 }

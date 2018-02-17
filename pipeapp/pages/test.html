@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Testing</title>
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png" sizes="16x16">
+</head>
+
+<body>
+    <h1>Testing</h1>
+    <p onclick="setStatus(0)" class="btnt">Init position touched</p>
+    <p onclick="setStatus(1)" class="btnt">Pipe touched</p>
+    <p onclick="setStatus(2)" class="btnt">End position touched</p>
+    <p onclick="setStatus(3)" class="btnt">Nothing touched</p>
+    <br>
+    <p onclick="getIp(3)" class="btnt">Get address</p>
+    <div id="message"></div>
+    <script>
+        function setStatus(s) {
+            fetch('/setRingStatus/' + s).then(function (response) {
+                return response.json();
+                throw new TypeError("Oops, we haven't got JSON!");
+            })
+                .then(function (json) {
+                    f('message').innerHTML = json.oldstatus + ' -> ' + json.newstatus
+                })
+                .catch(function (error) { console.log(error); });
+        }
+        function getIp(s) {
+            fetch('/getip').then(function (response) {
+                return response.json();
+                throw new TypeError("Oops, we haven't got JSON!");
+            })
+                .then(function (json) {
+                    f('message').innerHTML = 'http://' + json.ip + ':' + json.port;
+                })
+                .catch(function (error) { console.log(error); });
+        }
+
+        function f(i) {
+            return document.getElementById(i);
+        }
+    </script>
+</body>
+
+</html>

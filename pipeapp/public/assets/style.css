@@ -1,0 +1,124 @@
+@font-face {
+    font-family: arcadefont;
+    src: url(ARCADECLASSIC.TTF);
+}
+@font-face {
+    font-family: karmatic;
+    src: url(ka1.ttf);
+}
+@font-face {
+    font-family: inova;
+    src: url(inova_13x7.ttf);
+}
+@font-face {
+    font-family: pressstart;
+    src: url(PressStart2P.ttf);
+}
+@font-face {
+    font-family: iconssouth;/*https://www.dafont.com/icons-south-st.font*/
+    src: url(iconssouth.ttf);
+}
+
+body{
+    font-family: inova;
+    background-color: black;
+    color: rgb(255, 155, 41);
+    font-size: 2em;
+    margin:0px;
+    width:100%;
+}
+h1, h2, h3{
+    text-align: center;
+    font-weight: normal;
+    color: rgb(250, 102, 17);
+}
+
+table {
+    width: 80%;
+    text-align: center;
+}
+
+/* unvisited link */
+a:link {
+    color: yellow;;
+}
+
+/* visited link */
+a:visited {
+    color: green;
+}
+
+/* mouse over link */
+a:hover {
+    color: hotpink;
+}
+
+/* selected link */
+a:active {
+    color: blue;
+}
+
+#fullscreen{
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    font-family: iconssouth;
+}
+
+.digits{
+    font-size: 4em;
+    width: 14%;
+}
+
+.dots{
+    font-size: 3em;
+    width: 8%;
+}
+
+#gameinfo{
+    text-align: center;
+    font-size: 2em;
+    height:50px;
+}
+
+#titleinfo{
+    text-align: center;
+    height:50px;
+}
+
+#inputbox{
+    text-align: left;
+    border: solid rgb(255, 155, 41) 2px;
+    margin: auto;
+    padding: 10px;
+    width: 50%;
+    margin-bottom: 20px;
+    height: 40px;
+}
+
+.btn {
+    border: solid rgb(255, 155, 41) 2px;
+    padding: 4px;
+    cursor: pointer;
+    width: 10%;
+}
+
+.btnt{
+    border: solid rgb(255, 155, 41) 2px;
+    padding: 4px;
+    margin: 10px;
+    width: max-content;
+    cursor: pointer;
+}
+
+.btnt:hover{
+    /*border: solid rgb(255, 155, 41) 2px;*/
+    /*padding: 4px;*/
+    /*cursor: pointer;*/
+    background-color: rgb(255, 155, 41);
+    color: black;
+}
+

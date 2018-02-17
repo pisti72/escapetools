@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Top score</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png" sizes="16x16">
+</head>
+
+<body>
+    <h1>Top score</h1>
+    <div id="list"></div>
+    <div id="fullscreen" onclick="toghttps://www.w3schools.com/js/js_array_sort.aspgleFullScreen()">n</div>
+    <script>
+        const ERROR = '<table align="center"><tr><td>ERROR: No connection to the database!</td></tr></table>';
+        const FULLSCREENON = 'n';
+        const FULLSCREENOFF = 'o';
+        var fullscreen = false;
+        setInterval(fetching, 1000);
+        function fetching() {
+            fetch('/gethighscore').then(function (response) {
+                return response.json();
+                throw new TypeError("Oops, we haven't got JSON!");
+            })
+                .then(function (json) {
+                    let s = '<table align="center">';
+                    for (let i = 0; i < json.length; i++) {
+                        s += '<tr>';
+                        s += '<td>' + (i + 1) + '.</td>';
+                        s += '<td>' + json[i].timeHuman + '</td>';
+                        s += '<td>' + json[i].name + '</td>';
+                        s += '<td>' + json[i].timestamp + '</td>';
+                        s += '</tr>';
+                    }
+                    s += '</table>';
+                    f('list').innerHTML = s;
+                })
+                .catch(function (error) {
+                    f('list').innerHTML = ERROR;
+                });
+        }
+        function toggleFullScreen() {
+            if (
+                document.fullscreenEnabled ||
+                document.webkitFullscreenEnabled ||
+                document.mozFullScreenEnabled ||
+                document.msFullscreenEnabled) {
+                var d = document.body;
+                if (!fullscreen) {
+                    fullscreen = true;
+                    f('fullscreen').innerHTML = FULLSCREENOFF;
+                    if (d.requestFullscreen) {
+                        d.requestFullscreen();
+                    } else if (d.webkitRequestFullscreen) {
+                        d.webkitRequestFullscreen();
+                    } else if (d.mozRequestFullScreen) {
+                        d.mozRequestFullScreen();
+                    } else if (d.msRequestFullscreen) {
+                        d.msRequestFullscreen();
+                    }
+                } else {
+                    fullscreen = false;
+                    f('fullscreen').innerHTML = FULLSCREENON;
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+            }
+        }
+        function f(i) {
+            return document.getElementById(i);
+        }
+    </script>
+</body>
+
+</html>
