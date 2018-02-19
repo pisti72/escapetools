@@ -1,3 +1,4 @@
+//-Created By Istvan
 doctype
 html
   head
@@ -6,37 +7,45 @@ html
     script(src='/functions.js')
   body
     div(id='server')
-      h1= message
-      p Please chose one:
+      h1= title
+      p= chooseone
       ul
-        li(onclick='toggleFullscreen()') Switch to fullscreen
-        li(onclick="lang('en')") Switch to English
-        li(onclick="lang('hu')") Switch to Hungarian
-        li(onclick='client(1)') I am client 1
-        li(onclick='client(2)') I am client 2
-        li(onclick='start()') Start
-        li(onclick='pause()') Pause
-        li(onclick='test()') Get my IP
+        li(onclick='toggleFullscreen()')= fullscreen
+        li(onclick="changelang('en')")= toeng
+        li(onclick="changelang('hu')")= tohun
+        li(onclick='changeclient(1)')= toplayer1
+        li(onclick='changeclient(2)')= toplayer2
+        li(onclick='hint(1)')= givehint1
+        li(onclick='hint(2)')= givehint2
+        li(onclick='stop(1)')= stop1
+        li(onclick='stop(2)')= stop2
+        li(onclick='start()')= startgame
+        li(onclick='pause()')= pausegame
+        li(onclick='getmyip()')= getmyip
       p(id='message')
+      p(id='version')= version
     div(id='client' class='centered')
-      table(width='80%',align='center')
+      table(width='80%', align='center')
         tr
-          td(id='d5',class='digit') 0
-          td(id='d4',class='digit') 1
-          td(class='colon') :
-          td(id='d3',class='digit') 2
-          td(id='d2',class='digit') 3
-          td(class='colon') :
-          td(id='d1',class='digit') 4
-          td(id='d0',class='digit') 5
+          td(colspan=8, id='clock', class='hint') -
+        tr
+          td(id='d5', class='digit') 0
+          td(id='d4', class='digit') 1
+          td(id='c1', class='colon') :
+          td(id='d3', class='digit') 2
+          td(id='d2', class='digit') 3
+          td(id='c0', class='colon') :
+          td(id='d1', class='digit') 4
+          td(id='d0', class='digit') 5
         tr
           td(colspan=4,class='hint') Used hints:
-          td(class='hint') 0
+          td(class='hint', id='myhint') -
           td(colspan=3)
         tr
-          td(colspan=4,class='hint right') Opponent hints:
-          td(class='hint') 0
+          td(colspan=4, class='hint right') Opponent hints:
+          td(class='hint', id='opponenthint') -
           td(colspan=3)
+    
 //-
       div(class='big',id='clock') 00:00:00
       div(class='mid') Hints: 0

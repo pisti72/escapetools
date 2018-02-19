@@ -1,0 +1,36 @@
+[
+    {
+        "title": "Dupla stopper",
+        "chooseone": "Kerlek valassz az alabbi lehetosegek kozul",
+        "fullscreen": "Valtas teljes kepernyore",
+        "toeng": "Valtas angolra",
+        "tohun": "Valtas magyarra",
+        "toplayer1": "Valtas 1-es jatekosra",
+        "toplayer2": "Valtas 2-es jatekosra",
+        "givehint1": "Tipp adas 1-es jatekosnak",
+        "givehint2": "Tipp adas 2-es jatekosnak",
+        "stop1": "Nyert 1-es jatekos",
+        "stop2": "Nyert 2-es jatekos",
+        "startgame": "Jatek inditasa",
+        "pausegame": "Jatek szuneteltetese",
+        "getmyip": "Mi az IP cimem",
+        "version": "Verzio:"
+    },
+    {
+        "title": "Douple timer",
+        "chooseone": "Kerlek valassz az alabbi lehetosegek kozul",
+        "fullscreen": "Switch to fullscreen",
+        "toeng": "Switch to English",
+        "tohun": "Switch to Hungarian",
+        "toplayer1": "I am player 1",
+        "toplayer2": "I am player 2",
+        "givehint1": "Give hint to Player 1",
+        "givehint2": "Give hint to Player 2",
+        "stop1": "Finished Player 1",
+        "stop2": "Finished Player 2",
+        "startgame": "Start game",
+        "pausegame": "Pause game",
+        "getmyip": "Get my IP address",
+        "version": "Version:"
+    }
+]

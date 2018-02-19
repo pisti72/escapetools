@@ -2,7 +2,8 @@
  * My app
  *
  */
-
+const package = require('./package.json')
+var texts = require('./translations.json')
 const express = require('express')
 var ip = require("ip")
 const app = express()
@@ -17,28 +18,38 @@ const MAXHINTS = 3
 const MAXTOP = 12
 
 var gameStatus = ONSTART
-var hints = 0
+var hint = [0, 0]
+texts[0].version += package.version
+texts[1].version += package.version
 
 app.set('view engine', 'pug')
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Hey', message: 'Hello there' })
+    let text = texts[0]
+    res.render('index', text) 
 })
+
 
 app.get('/getmyip', (req, res) => {
     var result = { ip: ip.address(), port: PORT }
     res.send(JSON.stringify(result))
 })
 
+app.get('/givehint/:player', (req, res) => {
+    let p = req.params.player
+    hint[p]++
+    res.send(JSON.stringify({ result: 'success' }))
+})
+
 app.get('/start', (req, res) => {
     gameStarted()
     var response = 'Started at: ' + startedAt
-    console.log(response)
+    //console.log(response)
     res.send(response)
 })
 
-app.get('/stop', (req, res) => {
+app.get('/stop/:player', (req, res) => {
     var d = new Date()
     var time = d.getTime() - startedAt
     var response = 'Your time: ' + time + '  in readable: ' + getReadable(time)
@@ -58,9 +69,28 @@ app.get('/getgamedata', (req, res) => {
     //TEST
     //time = 999999;
     //gameStatus = GAMEFINISHED;
-    var response = { time: getReadable(time), ms: time, hints: hints, status: gameStatus }
+    var response = {
+        time: getReadable(time),
+        ms: time,
+        hint1: hint[0],
+        hint2: hint[1],
+        status: gameStatus
+    }
     res.send(JSON.stringify(response))
 })
+
+app.get('/:lang', (req, res) => {
+    let l = req.params.lang
+    let i = 0;
+    if (l == 'hu') {
+        i = 0
+    } else if(l=='en'){
+        i = 1
+    }
+    let text = texts[i]
+    res.render('index', text)
+})
+
 
 app.listen(PORT, () => console.log('Server listening on port ' + PORT + '!'))
 
@@ -89,7 +119,7 @@ function getHHHHMMDDfromTimestamp(date) {
 function gameStarted() {
     var d = new Date()
     gameStatus = INGAME
-    hints = 0
+    hint = [0,0]
     startedAt = d.getTime()
 }
 
