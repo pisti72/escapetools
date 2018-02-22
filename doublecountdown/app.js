@@ -13,8 +13,8 @@ const ONSTART = 0
 const PAUSED = 1
 const ONSTOP = 2
 const PLAYING = 4
-const GAMEOVER = 5
-const GAMEFINISHED = 6
+const FINISHED1 = 5
+const FINISHED2 = 6
 const MAXHINTS = 3
 const MAXTOP = 12
 const ONEHOUR = 60 * 60 * 1000
@@ -56,11 +56,15 @@ app.get('/start', (req, res) => {
 })
 
 app.get('/pause', (req, res) => {
+    var d = new Date()
     if (status == PLAYING) {
-        var d = new Date()
         status = PAUSED
         pausedAt = targetTime - d.getTime()
+    }else if(status == PAUSED) {
+        status = PLAYING
+        targetTime = d.getTime() + pausedAt
     }
+
     res.send('paused')
 })
 
@@ -71,9 +75,14 @@ app.get('/increase', (req, res) => {
 
 app.get('/stop/:player', (req, res) => {
     var d = new Date()
-    var time = d.getTime() - startedAt
-    var response = 'Your time: ' + time + '  in readable: ' + getReadable(time)
-    res.send(response)
+    var player = req.params.player
+    pausedAt = targetTime - d.getTime()
+    if(player == 1){
+        status = FINISHED1
+    }else{
+        status = FINISHED2
+    }
+    res.send('stopped')
 })
 
 app.get('/getgamedata', (req, res) => {
@@ -84,14 +93,9 @@ app.get('/getgamedata', (req, res) => {
     } else if (status == PLAYING) {
         //time = d.getTime() - startedAt
         time = targetTime - d.getTime()
-    } else if (status == PAUSED) {
+    } else if (status == PAUSED || status == FINISHED1 || status == FINISHED2) {
         time = pausedAt
-    } else if (status == GAMEOVER || status == GAMEFINISHED) {
-        time = stoppedAt - startedAt
     }
-    //TEST
-    //time = 999999;
-    //gameStatus = GAMEFINISHED;
     var response = {
         time: getReadable(time),
         ms: time,

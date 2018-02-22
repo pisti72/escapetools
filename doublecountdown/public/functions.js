@@ -1,6 +1,15 @@
+const ONSTART = 0;
+const PAUSED = 1;
+const ONSTOP = 2;
+const PLAYING = 4;
+const FINISHED1 = 5;
+const FINISHED2 = 6;
+
+
 var thread;
 var fullscreen = false;
 var client = 0;
+
 
 function getmyip() {
     fetch('/getmyip').then(function (response) {
@@ -51,7 +60,14 @@ function pause() {
     fetch('/pause').then().catch(function (error) {
         console.log(error)
     })
-    f('message').innerHTML = 'Game paused';
+    f('message').innerHTML = f('paused').innerHTML;
+}
+
+function stop(n) {
+    fetch('/stop/'+n).then().catch(function (error) {
+        console.log(error)
+    })
+    f('message').innerHTML = f('stopped').innerHTML;
 }
 
 function increase(n) {
@@ -64,7 +80,8 @@ function loop() {
     fetch('/getgamedata').then(function (response) {
         return response.json()
     }).then(function (json) {
-        var time = json.time
+        var time = json.time;
+        var status = json.status;
         var second = time.substr(4, 1) * 1;
         var c = ':';
         f('d5').innerHTML = time.substr(0, 1);
@@ -73,9 +90,13 @@ function loop() {
         f('d2').innerHTML = time.substr(4, 1);
         f('d1').innerHTML = time.substr(6, 1);
         f('d0').innerHTML = time.substr(7, 1);
-        if (second % 2 == 0) {
-            c = ' ';
-        } else {
+        if(status == PLAYING){
+            if (second % 2 == 0) {
+                c = ':';
+            } else {
+                c = ' ';
+            }
+        }else{
             c = ':';
         }
         f('c0').innerHTML = c;
@@ -88,6 +109,18 @@ function loop() {
             f('myhint').innerHTML = json.hint2;
             f('opponenthint').innerHTML = json.hint1;
         }
+        if(status == ONSTART){
+            f('clock').innerHTML = f('startsoon').innerHTML;
+        }if(status == FINISHED1 || status == FINISHED2){
+            if(client == 1 && status == FINISHED1 || client == 2 && status == FINISHED2){
+                f('clock').innerHTML = f('wewon').innerHTML;
+            }else {
+                f('clock').innerHTML = f('otherswon').innerHTML;
+            }
+        }else{
+            f('clock').innerHTML = '';
+        }
+        
     }).catch(function (error) {
         f('clock').innerHTML = f('noconnection').innerHTML;
     })
