@@ -17,7 +17,7 @@ li{
     cursor: pointer;
 }
 
-#client{
+#client, #translations{
     display: none;
 }
 

@@ -8,7 +8,7 @@ function getmyip() {
     }).then(function (json) {
         f('message').innerHTML = json.ip + ':' + json.port;
     }).catch(function (error) {
-        f('message').innerHTML = 'Server not available';
+        f('message').innerHTML = f('noconnection').innerHTML;
     })
 
 }
@@ -20,21 +20,24 @@ function changeclient(n) {
 }
 
 function hint(n) {
-    fetch('/givehint/' + (n-1)).then().catch(function (error) {
-        console.log(error)
+    fetch('/givehint/' + (n - 1)).then().catch(function (error) {
+        f('message').innerHTML = f('noconnection').innerHTML;
     })
-    f('message').innerHTML = 'Hint given to player ' + n;
+    f('message').innerHTML = f('hintgiven').innerHTML + n;
 }
 
-function changelang(n){
-    window.location.href='/'+n;
+function changelang(n) {
+    window.location.href = '/' + n;
 }
 
 function start() {
     fetch('/start').then().catch(function (error) {
-        console.log(error)
+        f('message').innerHTML = f('noconnection').innerHTML;
     })
-    f('message').innerHTML = 'Game started';
+    f('clock').innerHTML = '';
+    //f('message').innerHTML = 'Game started';
+    thread = setInterval('loop()', 481);
+
 }
 
 function pause() {
@@ -49,7 +52,7 @@ function loop() {
         return response.json()
     }).then(function (json) {
         var time = json.time
-        var second = time.substr(4, 1)*1;
+        var second = time.substr(4, 1) * 1;
         var c = ':';
         f('d5').innerHTML = time.substr(0, 1);
         f('d4').innerHTML = time.substr(1, 1);
@@ -57,23 +60,23 @@ function loop() {
         f('d2').innerHTML = time.substr(4, 1);
         f('d1').innerHTML = time.substr(6, 1);
         f('d0').innerHTML = time.substr(7, 1);
-        if(second%2==0){
+        if (second % 2 == 0) {
             c = ' ';
-        }else{
+        } else {
             c = ':';
         }
         f('c0').innerHTML = c;
         f('c1').innerHTML = c;
         f('message').innerHTML = time;
-        if(client == 1) {
+        if (client == 1) {
             f('myhint').innerHTML = json.hint1;
             f('opponenthint').innerHTML = json.hint2;
-        }else{
+        } else {
             f('myhint').innerHTML = json.hint2;
             f('opponenthint').innerHTML = json.hint1;
         }
     }).catch(function (error) {
-        f('clock').innerHTML = 'Server not available';
+        f('clock').innerHTML = f('noconnection').innerHTML;
     })
 }
 

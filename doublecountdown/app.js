@@ -8,9 +8,9 @@ const express = require('express')
 var ip = require("ip")
 const app = express()
 const PORT = 3000;
+
 const ONSTART = 0
 const ONSTOP = 2
-const INAIR = 3
 const INGAME = 4
 const GAMEOVER = 5
 const GAMEFINISHED = 6
@@ -18,6 +18,7 @@ const MAXHINTS = 3
 const MAXTOP = 12
 
 var gameStatus = ONSTART
+var startedAt = 0
 var hint = [0, 0]
 texts[0].version += package.version
 texts[1].version += package.version

@@ -9,11 +9,16 @@
         "toplayer2": "Valtas 2-es jatekosra",
         "givehint1": "Tipp adas 1-es jatekosnak",
         "givehint2": "Tipp adas 2-es jatekosnak",
+        "hintgiven" : "Tipp megadva játékosnak: ",
+        "myhints" : "Tippjeim:",
+        "opponenthints" : "Ellenfel tippjei:",
         "stop1": "Nyert 1-es jatekos",
         "stop2": "Nyert 2-es jatekos",
         "startgame": "Jatek inditasa",
         "pausegame": "Jatek szuneteltetese",
+        "increase5" : "Noveles 5 perccel",
         "getmyip": "Mi az IP cimem",
+        "noconnection": "Nincs kapcsolat",
         "version": "Verzio:"
     },
     {
@@ -26,11 +31,16 @@
         "toplayer2": "I am player 2",
         "givehint1": "Give hint to Player 1",
         "givehint2": "Give hint to Player 2",
+        "hintgiven" : "Hint given to player ",
+        "myhints" : "My used hints:",
+        "opponenthints" : "Opponent hints:",
         "stop1": "Finished Player 1",
         "stop2": "Finished Player 2",
         "startgame": "Start game",
         "pausegame": "Pause game",
+        "increase5" : "Increase by 5 minutes",
         "getmyip": "Get my IP address",
+        "noconnection": "Server not available",
         "version": "Version:"
     }
 ]

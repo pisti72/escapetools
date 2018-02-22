@@ -21,6 +21,7 @@ html
         li(onclick='stop(2)')= stop2
         li(onclick='start()')= startgame
         li(onclick='pause()')= pausegame
+        li(onclick='increase(5)')= increase5
         li(onclick='getmyip()')= getmyip
       p(id='message')
       p(id='version')= version
@@ -38,15 +39,15 @@ html
           td(id='d1', class='digit') 4
           td(id='d0', class='digit') 5
         tr
-          td(colspan=4,class='hint') Used hints:
+          td(colspan=4,class='hint')= myhints
           td(class='hint', id='myhint') -
           td(colspan=3)
         tr
-          td(colspan=4, class='hint right') Opponent hints:
+          td(colspan=4, class='hint right')= opponenthints
           td(class='hint', id='opponenthint') -
           td(colspan=3)
+    div(id='translations')
+      div(id='hintgiven')= hintgiven
+      div(id='noconnection')= noconnection
     
-//-
-      div(class='big',id='clock') 00:00:00
-      div(class='mid') Hints: 0
-      div(class='mid') Opponent hints: 0
+
