@@ -10,15 +10,20 @@ const app = express()
 const PORT = 3000;
 
 const ONSTART = 0
+const PAUSED = 1
 const ONSTOP = 2
-const INGAME = 4
+const PLAYING = 4
 const GAMEOVER = 5
 const GAMEFINISHED = 6
 const MAXHINTS = 3
 const MAXTOP = 12
+const ONEHOUR = 60 * 60 * 1000
+const FIVEMINUTES = 5 * 60 * 1000
 
-var gameStatus = ONSTART
+var status = ONSTART
 var startedAt = 0
+var targetTime = 0
+
 var hint = [0, 0]
 texts[0].version += package.version
 texts[1].version += package.version
@@ -28,7 +33,7 @@ app.use(express.static('public'))
 
 app.get('/', (req, res) => {
     let text = texts[0]
-    res.render('index', text) 
+    res.render('index', text)
 })
 
 
@@ -50,6 +55,20 @@ app.get('/start', (req, res) => {
     res.send(response)
 })
 
+app.get('/pause', (req, res) => {
+    if (status == PLAYING) {
+        var d = new Date()
+        status = PAUSED
+        pausedAt = targetTime - d.getTime()
+    }
+    res.send('paused')
+})
+
+app.get('/increase', (req, res) => {
+    targetTime += FIVEMINUTES
+    res.send('increased')
+})
+
 app.get('/stop/:player', (req, res) => {
     var d = new Date()
     var time = d.getTime() - startedAt
@@ -60,11 +79,14 @@ app.get('/stop/:player', (req, res) => {
 app.get('/getgamedata', (req, res) => {
     var d = new Date()
     var time;
-    if (gameStatus == ONSTART) {
+    if (status == ONSTART) {
         time = 0
-    } else if (gameStatus == INGAME) {
-        time = d.getTime() - startedAt
-    } else if (gameStatus == GAMEOVER || gameStatus == GAMEFINISHED) {
+    } else if (status == PLAYING) {
+        //time = d.getTime() - startedAt
+        time = targetTime - d.getTime()
+    } else if (status == PAUSED) {
+        time = pausedAt
+    } else if (status == GAMEOVER || status == GAMEFINISHED) {
         time = stoppedAt - startedAt
     }
     //TEST
@@ -75,7 +97,7 @@ app.get('/getgamedata', (req, res) => {
         ms: time,
         hint1: hint[0],
         hint2: hint[1],
-        status: gameStatus
+        status: status
     }
     res.send(JSON.stringify(response))
 })
@@ -85,7 +107,7 @@ app.get('/:lang', (req, res) => {
     let i = 0;
     if (l == 'hu') {
         i = 0
-    } else if(l=='en'){
+    } else if (l == 'en') {
         i = 1
     }
     let text = texts[i]
@@ -119,9 +141,10 @@ function getHHHHMMDDfromTimestamp(date) {
 
 function gameStarted() {
     var d = new Date()
-    gameStatus = INGAME
-    hint = [0,0]
+    status = PLAYING
+    hint = [0, 0]
     startedAt = d.getTime()
+    targetTime = startedAt + ONEHOUR
 }
 
 function getReadable(time) {

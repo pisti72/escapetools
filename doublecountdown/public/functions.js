@@ -16,6 +16,13 @@ function changeclient(n) {
     f('server').style.display = 'none';
     f('client').style.display = 'block';
     client = n;
+    if(client == 1){
+        f('client').style.color = 'rgb(0, 255, 0)';
+        f('client').style.textShadow = '0px 0px 20px rgba(0, 255, 0, .7)';
+    }else{
+        f('client').style.color = 'rgb(255, 0, 0)';
+        f('client').style.textShadow = '0px 0px 20px rgba(255, 0, 0, .7)';
+    }
     thread = setInterval('loop()', 50);
 }
 
@@ -45,6 +52,12 @@ function pause() {
         console.log(error)
     })
     f('message').innerHTML = 'Game paused';
+}
+
+function increase(n) {
+    fetch('/increase').then().catch(function (error) {
+        console.log(error)
+    })
 }
 
 function loop() {
