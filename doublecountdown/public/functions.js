@@ -4,11 +4,13 @@ const ONSTOP = 2;
 const PLAYING = 4;
 const FINISHED1 = 5;
 const FINISHED2 = 6;
+const FREQ = 50;
 
 
 var thread;
 var fullscreen = false;
 var client = 0;
+var counter =0;
 
 
 function getmyip() {
@@ -32,7 +34,7 @@ function changeclient(n) {
         f('client').style.color = 'rgb(255, 0, 0)';
         f('client').style.textShadow = '0px 0px 20px rgba(255, 0, 0, .7)';
     }
-    thread = setInterval('loop()', 50);
+    thread = setInterval('loop()', FREQ);
 }
 
 function hint(n) {
@@ -53,7 +55,6 @@ function start() {
     f('clock').innerHTML = '';
     //f('message').innerHTML = 'Game started';
     thread = setInterval('loop()', 481);
-
 }
 
 function pause() {
@@ -61,6 +62,13 @@ function pause() {
         console.log(error)
     })
     f('message').innerHTML = f('paused').innerHTML;
+}
+
+function inic() {
+    fetch('/inic').then().catch(function (error) {
+        console.log(error)
+    })
+    f('message').innerHTML = f('inicialized').innerHTML;
 }
 
 function stop(n) {
@@ -110,8 +118,13 @@ function loop() {
             f('opponenthint').innerHTML = json.hint1;
         }
         if(status == ONSTART){
-            f('clock').innerHTML = f('startsoon').innerHTML;
-        }if(status == FINISHED1 || status == FINISHED2){
+            counter++;
+            if(counter%FREQ > FREQ/2){
+                f('clock').innerHTML = f('startsoon').innerHTML;
+            }else{
+                f('clock').innerHTML = '';
+            }
+        }else if(status == FINISHED1 || status == FINISHED2){
             if(client == 1 && status == FINISHED1 || client == 2 && status == FINISHED2){
                 f('clock').innerHTML = f('wewon').innerHTML;
             }else {

@@ -22,6 +22,10 @@ li{
     display: none;
 }
 
+#clock{
+    height: 60px;
+}
+
 .digit{
     font-size: 20vw;
     text-align: right;

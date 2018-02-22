@@ -43,16 +43,29 @@ app.get('/getmyip', (req, res) => {
 })
 
 app.get('/givehint/:player', (req, res) => {
-    let p = req.params.player
-    hint[p]++
+    if (status == PLAYING) {
+        let p = req.params.player
+        hint[p]++
+    }
     res.send(JSON.stringify({ result: 'success' }))
 })
 
+app.get('/inic', (req, res) => {
+    status = ONSTART
+    hint = [0, 0]
+    res.send('inicialized')
+})
+
 app.get('/start', (req, res) => {
-    gameStarted()
-    var response = 'Started at: ' + startedAt
-    //console.log(response)
-    res.send(response)
+    if (status == ONSTART) {
+        var d = new Date()
+        status = PLAYING
+        startedAt = d.getTime()
+        targetTime = startedAt + ONEHOUR
+        res.send('started')
+    } else {
+        res.send('inicilize first')
+    }
 })
 
 app.get('/pause', (req, res) => {
@@ -60,7 +73,7 @@ app.get('/pause', (req, res) => {
     if (status == PLAYING) {
         status = PAUSED
         pausedAt = targetTime - d.getTime()
-    }else if(status == PAUSED) {
+    } else if (status == PAUSED) {
         status = PLAYING
         targetTime = d.getTime() + pausedAt
     }
@@ -74,15 +87,19 @@ app.get('/increase', (req, res) => {
 })
 
 app.get('/stop/:player', (req, res) => {
-    var d = new Date()
-    var player = req.params.player
-    pausedAt = targetTime - d.getTime()
-    if(player == 1){
-        status = FINISHED1
-    }else{
-        status = FINISHED2
+    if (status == PLAYING) {
+        var d = new Date()
+        var player = req.params.player
+        pausedAt = targetTime - d.getTime()
+        if (player == 1) {
+            status = FINISHED1
+        } else {
+            status = FINISHED2
+        }
+        res.send('stopped')
+    } else {
+        res.send('only in playing')
     }
-    res.send('stopped')
 })
 
 app.get('/getgamedata', (req, res) => {
