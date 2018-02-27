@@ -19,14 +19,14 @@ function loopControl() {
     fetch('/getplayers').then(function (response) {
         return response.json()
     }).then(function (json) {
-        f('greenmessage').innerHTML = json[0].message;
-        f('redmessage').innerHTML = json[1].message;
-        f('greentime').innerHTML = json[0].time;
-        f('redtime').innerHTML = json[1].time;
-        f('greenhint').innerHTML = json[0].hinttext + json[0].hints;
-        f('redhint').innerHTML = json[1].hinttext + json[1].hints;
+        f('greenmessage').innerHTML = json.green.message;
+        f('redmessage').innerHTML = json.red.message;
+        f('greentime').innerHTML = json.green.time;
+        f('redtime').innerHTML = json.red.time;
+        f('greenhint').innerHTML = json.green.hinttext + json.green.hints;
+        f('redhint').innerHTML = json.red.hinttext + json.red.hints;
     }).catch(function (error) {
-        f('message').innerHTML = 'Connection lost';
+        f('message').innerHTML = 'Nincs kapcsolat';
     })
 }
 
@@ -161,9 +161,32 @@ function loopClient() {
     fetch('/getplayers').then(function (response) {
         return response.json()
     }).then(function (json) {
-        var time = json[client].time;
-
-        f('message').innerHTML = json[client].message;
+        var time;
+        if (client == 0) {
+            time = json.green.time;
+            f('message').innerHTML = json.green.message;
+            f('hinttext').innerHTML = json.green.hinttext;
+            f('hints').innerHTML = json.green.hints;
+            if (!json.separate) {
+                f('opphinttext').innerHTML = json.green.opphinttext;
+                f('opphints').innerHTML = json.red.hints;
+            } else {
+                f('opphinttext').innerHTML = '';
+                f('opphints').innerHTML = '';
+            }
+        } else {
+            time = json.red.time;
+            f('message').innerHTML = json.red.message;
+            f('hinttext').innerHTML = json.red.hinttext;
+            f('hints').innerHTML = json.red.hints;
+            if (!json.separate) {
+                f('opphinttext').innerHTML = json.red.opphinttext;
+                f('opphints').innerHTML = json.green.hints;
+            } else {
+                f('opphinttext').innerHTML = '';
+                f('opphints').innerHTML = '';
+            }
+        }
 
         f('d5').innerHTML = time.substr(0, 1);
         f('d4').innerHTML = time.substr(1, 1);
@@ -173,15 +196,6 @@ function loopClient() {
         f('c0').innerHTML = time.substr(5, 1);
         f('d1').innerHTML = time.substr(6, 1);
         f('d0').innerHTML = time.substr(7, 1);
-
-        f('hinttext').innerHTML = json[client].hinttext;
-        f('hints').innerHTML = json[client].hints;
-        f('opphinttext').innerHTML = json[client].opphinttext;
-        if (client == 0) {
-            f('opphints').innerHTML = json[1].hints;
-        } else {
-            f('opphints').innerHTML = json[0].hints;
-        }
     }).catch(function (error) {
         f('message').innerHTML = 'Connection lost';
     })

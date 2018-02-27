@@ -15,6 +15,7 @@ const ONSTOP = 2
 const PLAYING = 4
 const WEWON = 5
 const WELOSE = 6
+const OUTOFTIME = 7
 const MAXHINTS = 3
 const MAXTOP = 12
 const ONEHOUR = 60 * 60 * 1000
@@ -32,7 +33,7 @@ function Player() {
     this.targetTime = 0
     this.text
     this.inicGame = function () {
-        if (this.status == WEWON || this.status == WELOSE) {
+        if (this.status == WEWON || this.status == WELOSE || this.status == OUTOFTIME) {
             this.hint = 0
             this.status = ONSTART
         }
@@ -101,6 +102,10 @@ function Player() {
             }
         } else if (this.status == PLAYING) {
             this.time = this.targetTime - d.getTime()
+            if(this.time < 0){
+                this.time = 0
+                this.status = OUTOFTIME
+            }
             timeR = this.getReadable(this.time)
             if (isHalf) {
                 timeR = timeR.replace(':', ' ').replace(':', ' ')
@@ -122,6 +127,12 @@ function Player() {
             timeR = this.getReadable(this.time)
             if (isHalf) {
                 this.message = this.text.welose
+            }
+        } else if (this.status == OUTOFTIME) {
+            this.time = 0
+            timeR = this.getReadable(this.time)
+            if (isHalf) {
+                this.message = this.text.outoftime
             }
         } else {
             this.message = this.text.error
@@ -151,6 +162,8 @@ function Player() {
         }
     }
 }
+
+var isSeparate = false;
 
 var players = [new Player(), new Player()]
 players[0].setText(texts.hu)
@@ -188,33 +201,38 @@ app.get('/dechint/:player', (req, res) => {
 app.get('/getplayers', (ree, res) => {
     res.send(
         JSON.stringify(
-            [
-                players[0].getData(),
-                players[1].getData()
-            ]
+            {
+                green: players[0].getData(),
+                red: players[1].getData(),
+                separate: isSeparate
+            }
         )
     )
 })
 
 app.get('/inic/:player', (req, res) => {
     let p = req.params.player
+    isSeparate = true;
     players[p].inicGame()
     res.send('inicialized : ' + p)
 })
 
 app.get('/inicboth', (req, res) => {
+    isSeparate = false;
     players[0].inicGame()
     players[1].inicGame()
     res.send('inicialized both')
 })
 
 app.get('/start/:player', (req, res) => {
+    isSeparate = true;
     let p = req.params.player
     players[p].startGame()
     res.send('started : ' + p)
 })
 
 app.get('/startboth', (req, res) => {
+    isSeparate = false;
     players[0].startGame()
     players[1].startGame()
     res.send('started both')
@@ -260,10 +278,14 @@ app.get('/won/:player', (req, res) => {
     let p = req.params.player
     if (p == 0) {
         players[0].wonGame()
-        players[1].loseGame()
+        if(!isSeparate){
+            players[1].loseGame()
+        }
     } else {
         players[1].wonGame()
-        players[0].loseGame()
+        if(!isSeparate){
+            players[0].loseGame()
+        }
     }
     res.send('finished')
 })
