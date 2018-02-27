@@ -21,25 +21,124 @@ const ONEHOUR = 60 * 60 * 1000
 const FIVEMINUTES = 5 * 60 * 1000
 const ONEMINUTES = 60 * 1000
 
-texts.version = package.version
+texts.hu.versionnr = texts.en.versionnr = package.version
 
-var status = ONSTART
-var startedAt = 0
-var targetTime = 0
-var text = texts.hu
+function Player() {
+    this.time = 0
+    this.status = ONSTART
+    this.hint = 0
+    this.startedAt = 0
+    this.pausedAt = 0
+    this.targetTime = 0
+    this.text
+    this.txtStartsoon = ''
+    this.txtPaused = ''
+    this.txtHints = ''
+    this.txtOpponenthints = ''
+    this.inicGame = function () {
+        this.hint = 0
+        this.status = ONSTART
+    }
+    this.setText = function (text) {
+        this.text = text
+    }
+    this.startGame = function () {
+        if (this.status == ONSTART) {
+            let d = new Date()
+            this.status = PLAYING
+            this.startedAt = d.getTime()
+            this.targetTime = this.startedAt + ONEHOUR
+        }
+    }
+    this.pauseGame = function () {
+        let d = new Date()
+        if (this.status == PLAYING) {
+            this.status = PAUSED
+            this.pausedAt = this.targetTime - d.getTime()
+        } else if (this.status == PAUSED) {
+            this.status = PLAYING
+            this.targetTime = d.getTime() + this.pausedAt
+        }
+    }
+    this.incHint = function () {
+        if (this.status == PLAYING) {
+            this.hint++
+        }
+    }
+    this.decHint = function () {
+        if (this.status == PLAYING) {
+            this.hint--
+            if (this.hint < 0) {
+                this.hint = 0
+            }
+        }
+    }
+    this.getData = function () {
+        var d = new Date()
+        var isHalf = Math.floor(d.getTime() / 1000) % 2 == 0
+        this.message = ''
+        var timeR
+        if (this.status == ONSTART) {
+            this.time = 0
+            timeR = this.getReadable(this.time)
+            if (isHalf) {
+                this.message = this.text.startsoon
+            }
+        } else if (this.status == PLAYING) {
+            this.time = this.targetTime - d.getTime()
+            timeR = this.getReadable(this.time)
+            if (isHalf) {
+                timeR = timeR.replace(':', ' ').replace(':', ' ')
+            }
+        } else if (this.status == PAUSED) {
+            this.time = this.pausedAt
+            timeR = this.getReadable(this.time)
+            if (isHalf) {
+                this.message = this.text.paused
+            }
+        } else if (this.thstatus == FINISHED1 || this.status == FINISHED2) {
 
-var hint = [0, 0]
+        }
+        return {
+            message: this.message,
+            time: timeR,
+            hinttext: this.text.myhints,
+            opphinttext: this.text.opponenthints,
+            hints: this.hint,
+        }
+    }
+    this.getReadable = function (time) {
+        var t = new Date(time)
+        return this.two(t.getMinutes()) + ':' + this.two(t.getSeconds()) + ':' + this.two(t.getMilliseconds())
+    }
+    this.two = function (n) {
+        var s = n + ''
+        if (s.length == 1) {
+            return '0' + s
+        }
+        if (s.length == 2) {
+            return s
+        }
+        if (s.length > 2) {
+            return s.substr(0, 2)
+        }
+    }
+}
+
+var players = [new Player(), new Player()]
+players[0].setText(texts.hu)
+players[1].setText(texts.hu)
 
 
 app.set('view engine', 'pug')
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-    res.render('index', texts)
+    res.render('index', texts.hu)
 })
 
 app.get('/player', (req, res) => {
-    res.render('player', texts)
+    res.render('player')
 })
 
 app.get('/getmyip', (req, res) => {
@@ -47,43 +146,63 @@ app.get('/getmyip', (req, res) => {
     res.send(JSON.stringify(result))
 })
 
-app.get('/givehint/:player', (req, res) => {
-    if (status == PLAYING) {
-        let p = req.params.player
-        hint[p]++
-    }
-    res.send(JSON.stringify({ result: 'success' }))
+app.get('/inchint/:player', (req, res) => {
+    let p = req.params.player
+    players[p].incHint()
+    res.send('hint increased : ' + p)
 })
 
-app.get('/inic', (req, res) => {
-    status = ONSTART
-    hint = [0, 0]
-    res.send('inicialized')
+app.get('/dechint/:player', (req, res) => {
+    let p = req.params.player
+    players[p].decHint()
+    res.send('hint decreased : ' + p)
 })
 
-app.get('/start', (req, res) => {
-    if (status == ONSTART) {
-        var d = new Date()
-        status = PLAYING
-        startedAt = d.getTime()
-        targetTime = startedAt + ONEHOUR
-        res.send('started')
-    } else {
-        res.send('inicilize first')
-    }
+app.get('/getplayers', (ree, res) => {
+    res.send(
+        JSON.stringify(
+            [
+                players[0].getData(),
+                players[1].getData()
+            ]
+        )
+    )
 })
 
-app.get('/pause', (req, res) => {
-    var d = new Date()
-    if (status == PLAYING) {
-        status = PAUSED
-        pausedAt = targetTime - d.getTime()
-    } else if (status == PAUSED) {
-        status = PLAYING
-        targetTime = d.getTime() + pausedAt
-    }
+app.get('/inic/:player', (req, res) => {
+    let p = req.params.player
+    players[p].inicGame()
+    res.send('inicialized : ' + p)
+})
 
-    res.send('paused')
+app.get('/inicboth', (req, res) => {
+    players[0].inicGame()
+    players[1].inicGame()
+    res.send('inicialized both')
+})
+
+app.get('/start/:player', (req, res) => {
+    let p = req.params.player
+    players[p].startGame()
+    res.send('started : ' + p)
+})
+
+app.get('/startboth', (req, res) => {
+    players[0].startGame()
+    players[1].startGame()
+    res.send('started both')
+})
+
+app.get('/pause/:player', (req, res) => {
+    let p = req.params.player
+    players[p].pauseGame()
+    res.send('paused : ' + p)
+})
+
+app.get('/pauseboth', (req, res) => {
+    players[0].pauseGame()
+    players[1].pauseGame()
+    res.send('paused both')
 })
 
 app.get('/inconemin', (req, res) => {
@@ -112,60 +231,16 @@ app.get('/stop/:player', (req, res) => {
     }
 })
 
-app.get('/getplayer/:p', (req, res) => {
-    var d = new Date()
-    var time
-    var response
-    var message = ''
-    var timeR
-    if (status == ONSTART) {
-        time = 0
-        timeR = getReadable(time)
-        if (Math.floor(d.getTime() / 1000) % 2 == 0) {
-            message = ''
-        } else {
-            message = text.startsoon
-        }
-    } else if (status == PLAYING) {
-        //time = d.getTime() - startedAt
-        time = targetTime - d.getTime()
-    } else if (status == PAUSED || status == FINISHED1 || status == FINISHED2) {
-        time = pausedAt
-    }
-
-   
-
-    if (req.params.p == 1) {
-        response = {
-            message: message,
-            time: timeR,
-            hinttext: text.myhints,
-            opphinttext: text.opponenthints,
-            hints: hint[0],
-            opphints: hint[1]
-        }
-    } else if (req.params.p == 2) {
-        response = {
-            message: message,
-            time: timeR,
-            hinttext: text.myhints,
-            opphinttext: text.opponenthints,
-            hints: hint[1],
-            opphints: hint[0]
-        }
-    }
-
-    res.send(JSON.stringify(response))
-})
-
 app.get('/setlang/:lang', (req, res) => {
     if (req.params.lang == 'hu') {
-        text = texts.hu
+        players[0].setText(texts.hu)
+        players[1].setText(texts.hu)
         res.send('magyar')
     } else if (req.params.lang == 'en') {
-        text = texts.en
+        players[0].setText(texts.en)
+        players[1].setText(texts.en)
         res.send('english')
-    }else{
+    } else {
         res.send('no success')
     }
 })
@@ -195,30 +270,7 @@ function getHHHHMMDDfromTimestamp(date) {
     return yyyy + '/' + mm + '/' + dd;
 }
 
-function gameStarted() {
-    var d = new Date()
-    status = PLAYING
-    hint = [0, 0]
-    startedAt = d.getTime()
-    targetTime = startedAt + ONEHOUR
-}
 
-function getReadable(time) {
-    var t = new Date(time)
-    return two(t.getMinutes()) + ':' + two(t.getSeconds()) + ':' + two(t.getMilliseconds())
-}
 
-function two(n) {
-    var s = n + ''
-    if (s.length == 1) {
-        return '0' + s
-    }
-    if (s.length == 2) {
-        return s
-    }
-    if (s.length > 2) {
-        return s.substr(0, 2)
-    }
-}
 
 

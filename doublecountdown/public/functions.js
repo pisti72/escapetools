@@ -11,9 +11,28 @@ var thread;
 var fullscreen = false;
 var client = 0;
 
+function startControl(){
+    thread = setInterval('loopControl()', 101);
+}
+
+function loopControl(){
+    fetch('/getplayers').then(function (response) {
+        return response.json()
+    }).then(function (json) {
+        f('greenmessage').innerHTML = json[0].message;
+        f('redmessage').innerHTML = json[1].message;
+        f('greentime').innerHTML = json[0].time;
+        f('redtime').innerHTML = json[1].time;
+        f('greenhint').innerHTML = 'Segitseg: ' + json[0].hints;
+        f('redhint').innerHTML = 'Segitseg: ' + json[1].hints;
+    }).catch(function (error) {
+        f('message').innerHTML = 'Connection lost';
+    })
+}
+
 function startClient(n) {
     client = n;
-    if (client == 1) {
+    if (client == 0) {
         document.body.style.color = 'rgb(0, 255, 0)';
         document.body.style.textShadow = '0px 0px 20px rgba(0, 255, 0, .7)';
     } else {
@@ -35,19 +54,6 @@ function getmyip() {
     })
 
 }
-function changeclient(n) {
-    f('server').style.display = 'none';
-    f('client').style.display = 'block';
-    client = n;
-    if (client == 1) {
-        f('client').style.color = 'rgb(0, 255, 0)';
-        f('client').style.textShadow = '0px 0px 20px rgba(0, 255, 0, .7)';
-    } else {
-        f('client').style.color = 'rgb(255, 0, 0)';
-        f('client').style.textShadow = '0px 0px 20px rgba(255, 0, 0, .7)';
-    }
-    thread = setInterval('loop()', FREQ);
-}
 
 function hint(n) {
     fetch('/givehint/' + (n - 1)).then().catch(function (error) {
@@ -56,17 +62,18 @@ function hint(n) {
     f('message').innerHTML = f('hintgiven').innerHTML + n;
 }
 
-function changelang(n) {
-    window.location.href = '/' + n;
+function setLang(n) {
+    fetch('/setlang/' + n).then().catch(function (error) {
+        f('message').innerHTML = f('noconnection').innerHTML;
+    })
+    f('message').innerHTML = f('hintgiven').innerHTML + n;
 }
 
 function start() {
-    fetch('/start').then().catch(function (error) {
+    fetch('/startboth').then().catch(function (error) {
         f('message').innerHTML = f('noconnection').innerHTML;
     })
-    f('clock').innerHTML = '';
-    //f('message').innerHTML = 'Game started';
-    thread = setInterval('loop()', 481);
+    f('message').innerHTML = '';
 }
 
 function pause() {
@@ -103,12 +110,12 @@ function decOneMin() {
 }
 
 function loopClient() {
-    fetch('/getplayer/' + client).then(function (response) {
+    fetch('/getplayers').then(function (response) {
         return response.json()
     }).then(function (json) {
-        var time = json.time;
+        var time = json[client].time;
         
-        f('message').innerHTML = json.message;
+        f('message').innerHTML = json[client].message;
 
         f('d5').innerHTML = time.substr(0, 1);
         f('d4').innerHTML = time.substr(1, 1);
@@ -119,10 +126,14 @@ function loopClient() {
         f('d1').innerHTML = time.substr(6, 1);
         f('d0').innerHTML = time.substr(7, 1);
 
-        f('hinttext').innerHTML = json.hinttext;
-        f('hints').innerHTML = json.hints;
-        f('opphinttext').innerHTML = json.opphinttext;
-        f('opphints').innerHTML = json.opphints;
+        f('hinttext').innerHTML = json[client].hinttext;
+        f('hints').innerHTML = json[client].hints;
+        f('opphinttext').innerHTML = json[client].opphinttext;
+        if(client == 0){
+            f('opphints').innerHTML = json[1].hints;
+        }else{
+            f('opphints').innerHTML = json[0].hints;
+        }
     }).catch(function (error) {
         f('message').innerHTML = 'Connection lost';
     })
