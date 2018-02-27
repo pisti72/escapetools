@@ -22,8 +22,8 @@ li{
     display: none;
 }
 
-#clock{
-    height: 60px;
+#message{
+    height: 10vh;
 }
 
 .digit{
@@ -46,7 +46,21 @@ li{
     /*text-shadow: 0px 0px 10px rgba(255, 255, 0, 1);*/
 }
 
-#version{
+.red{
+    background-color: #f00;
+    color: #fff;
+}
+
+.green{
+    background-color: #0F0;
+    color: #000;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+#version, #inic{
     position: fixed;
     right: 0px;
     bottom: 0px;

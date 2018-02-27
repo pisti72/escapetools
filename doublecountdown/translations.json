@@ -1,6 +1,6 @@
-[
-    {
-        "title": "Dupla stopper",
+{
+    "hu": {
+        "title": "Woolongong stopper",
         "chooseone": "Kerlek valassz az alabbi lehetosegek kozul",
         "fullscreen": "Valtas teljes kepernyore",
         "toeng": "Valtas angolra",
@@ -11,14 +11,14 @@
         "givehint2": "Tipp adas 2-es jatekosnak",
         "hintgiven": "Tipp megadva játékosnak: ",
         "startsoon": "A jatek hamarosan kezdodik",
-        "myhints": "Tippjeim:",
-        "opponenthints": "Ellenfel tippjei:",
+        "myhints": "Segitsegeim:",
+        "opponenthints": "Ellenfel segitsegei:",
         "stop1": "Nyert 1-es jatekos",
         "stop2": "Nyert 2-es jatekos",
         "stopped": "Megallitva",
         "startgame": "Jatek inditasa",
         "inicgame": "Jatek alaphelyzetbe allitasa",
-        "inicialized":"Jatek alaphelyzetbe allitva",
+        "inicialized": "Jatek alaphelyzetbe allitva",
         "pausegame": "Jatek szuneteltetese",
         "paused": "Szuneteltetve",
         "wewon": "Nyertunk!",
@@ -26,10 +26,10 @@
         "increase5": "Noveles 5 perccel",
         "getmyip": "Mi az IP cimem",
         "noconnection": "Nincs kapcsolat",
-        "version": "Verzio:"
+        "version": "Verzio: "
     },
-    {
-        "title": "Douple timer",
+    "en": {
+        "title": "Woolongong timer",
         "chooseone": "Please choose one option below:",
         "fullscreen": "Switch to fullscreen",
         "toeng": "Switch to English",
@@ -47,7 +47,7 @@
         "stopped": "Game stopped",
         "startgame": "Start game",
         "inicgame": "Inicialize game",
-        "inicialized":"Inicialized",
+        "inicialized": "Inicialized",
         "pausegame": "Pause game",
         "paused": "Game paused",
         "wewon": "We won!",
@@ -55,6 +55,6 @@
         "increase5": "Increase by 5 minutes",
         "getmyip": "Get my IP address",
         "noconnection": "Server not available",
-        "version": "Version:"
+        "version": "Version: "
     }
-]
+}

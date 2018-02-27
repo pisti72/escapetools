@@ -21,22 +21,26 @@ const ONEHOUR = 60 * 60 * 1000
 const FIVEMINUTES = 5 * 60 * 1000
 const ONEMINUTES = 60 * 1000
 
+texts.version = package.version
+
 var status = ONSTART
 var startedAt = 0
 var targetTime = 0
+var text = texts.hu
 
 var hint = [0, 0]
-texts[0].version += package.version
-texts[1].version += package.version
+
 
 app.set('view engine', 'pug')
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-    let text = texts[0]
-    res.render('index', text)
+    res.render('index', texts)
 })
 
+app.get('/player', (req, res) => {
+    res.render('player', texts)
+})
 
 app.get('/getmyip', (req, res) => {
     var result = { ip: ip.address(), port: PORT }
@@ -108,37 +112,62 @@ app.get('/stop/:player', (req, res) => {
     }
 })
 
-app.get('/getgamedata', (req, res) => {
+app.get('/getplayer/:p', (req, res) => {
     var d = new Date()
-    var time;
+    var time
+    var response
+    var message = ''
+    var timeR
     if (status == ONSTART) {
         time = 0
+        timeR = getReadable(time)
+        if (Math.floor(d.getTime() / 1000) % 2 == 0) {
+            message = ''
+        } else {
+            message = text.startsoon
+        }
     } else if (status == PLAYING) {
         //time = d.getTime() - startedAt
         time = targetTime - d.getTime()
     } else if (status == PAUSED || status == FINISHED1 || status == FINISHED2) {
         time = pausedAt
     }
-    var response = {
-        time: getReadable(time),
-        ms: time,
-        hint1: hint[0],
-        hint2: hint[1],
-        status: status
+
+   
+
+    if (req.params.p == 1) {
+        response = {
+            message: message,
+            time: timeR,
+            hinttext: text.myhints,
+            opphinttext: text.opponenthints,
+            hints: hint[0],
+            opphints: hint[1]
+        }
+    } else if (req.params.p == 2) {
+        response = {
+            message: message,
+            time: timeR,
+            hinttext: text.myhints,
+            opphinttext: text.opponenthints,
+            hints: hint[1],
+            opphints: hint[0]
+        }
     }
+
     res.send(JSON.stringify(response))
 })
 
-app.get('/:lang', (req, res) => {
-    let l = req.params.lang
-    let i = 0;
-    if (l == 'hu') {
-        i = 0
-    } else if (l == 'en') {
-        i = 1
+app.get('/setlang/:lang', (req, res) => {
+    if (req.params.lang == 'hu') {
+        text = texts.hu
+        res.send('magyar')
+    } else if (req.params.lang == 'en') {
+        text = texts.en
+        res.send('english')
+    }else{
+        res.send('no success')
     }
-    let text = texts[i]
-    res.render('index', text)
 })
 
 

@@ -10,8 +10,20 @@ const FREQ = 50;
 var thread;
 var fullscreen = false;
 var client = 0;
-var counter =0;
 
+function startClient(n) {
+    client = n;
+    if (client == 1) {
+        document.body.style.color = 'rgb(0, 255, 0)';
+        document.body.style.textShadow = '0px 0px 20px rgba(0, 255, 0, .7)';
+    } else {
+        document.body.style.color = 'rgb(255, 0, 0)';
+        document.body.style.textShadow = '0px 0px 20px rgba(255, 0, 0, .7)';
+    }
+    f('inic').style.display = 'none';
+    toggleFullscreen();
+    thread = setInterval('loopClient()', FREQ);
+}
 
 function getmyip() {
     fetch('/getmyip').then(function (response) {
@@ -27,10 +39,10 @@ function changeclient(n) {
     f('server').style.display = 'none';
     f('client').style.display = 'block';
     client = n;
-    if(client == 1){
+    if (client == 1) {
         f('client').style.color = 'rgb(0, 255, 0)';
         f('client').style.textShadow = '0px 0px 20px rgba(0, 255, 0, .7)';
-    }else{
+    } else {
         f('client').style.color = 'rgb(255, 0, 0)';
         f('client').style.textShadow = '0px 0px 20px rgba(255, 0, 0, .7)';
     }
@@ -72,7 +84,7 @@ function inic() {
 }
 
 function stop(n) {
-    fetch('/stop/'+n).then().catch(function (error) {
+    fetch('/stop/' + n).then().catch(function (error) {
         console.log(error)
     })
     f('message').innerHTML = f('stopped').innerHTML;
@@ -90,58 +102,29 @@ function decOneMin() {
     })
 }
 
-function loop() {
-    fetch('/getgamedata').then(function (response) {
+function loopClient() {
+    fetch('/getplayer/' + client).then(function (response) {
         return response.json()
     }).then(function (json) {
         var time = json.time;
-        var status = json.status;
-        var second = time.substr(4, 1) * 1;
-        var c = ':';
+        
+        f('message').innerHTML = json.message;
+
         f('d5').innerHTML = time.substr(0, 1);
         f('d4').innerHTML = time.substr(1, 1);
+        f('c1').innerHTML = time.substr(2, 1);
         f('d3').innerHTML = time.substr(3, 1);
         f('d2').innerHTML = time.substr(4, 1);
+        f('c0').innerHTML = time.substr(5, 1);
         f('d1').innerHTML = time.substr(6, 1);
         f('d0').innerHTML = time.substr(7, 1);
-        if(status == PLAYING){
-            if (second % 2 == 0) {
-                c = ':';
-            } else {
-                c = ' ';
-            }
-        }else{
-            c = ':';
-        }
-        f('c0').innerHTML = c;
-        f('c1').innerHTML = c;
-        f('message').innerHTML = time;
-        if (client == 1) {
-            f('myhint').innerHTML = json.hint1;
-            f('opponenthint').innerHTML = json.hint2;
-        } else {
-            f('myhint').innerHTML = json.hint2;
-            f('opponenthint').innerHTML = json.hint1;
-        }
-        if(status == ONSTART){
-            counter++;
-            if(counter%FREQ > FREQ/2){
-                f('clock').innerHTML = f('startsoon').innerHTML;
-            }else{
-                f('clock').innerHTML = '';
-            }
-        }else if(status == FINISHED1 || status == FINISHED2){
-            if(client == 1 && status == FINISHED1 || client == 2 && status == FINISHED2){
-                f('clock').innerHTML = f('wewon').innerHTML;
-            }else {
-                f('clock').innerHTML = f('otherswon').innerHTML;
-            }
-        }else{
-            f('clock').innerHTML = '';
-        }
-        
+
+        f('hinttext').innerHTML = json.hinttext;
+        f('hints').innerHTML = json.hints;
+        f('opphinttext').innerHTML = json.opphinttext;
+        f('opphints').innerHTML = json.opphints;
     }).catch(function (error) {
-        f('clock').innerHTML = f('noconnection').innerHTML;
+        f('message').innerHTML = 'Connection lost';
     })
 }
 
@@ -154,8 +137,6 @@ function toggleFullscreen() {
         var d = document.body;
         if (!fullscreen) {
             fullscreen = true;
-            //f('fullscreen').innerHTML = EMPTY;
-            //f('fullscreen').style.display = 'none';
             if (d.requestFullscreen) {
                 d.requestFullscreen();
             } else if (d.webkitRequestFullscreen) {
@@ -167,7 +148,6 @@ function toggleFullscreen() {
             }
         } else {
             fullscreen = false;
-            //f('fullscreen').style.display = 'block';
             if (document.exitFullscreen) {
                 document.exitFullscreen();
             } else if (document.webkitExitFullscreen) {

@@ -1,0 +1,31 @@
+//-Created By Istvan
+doctype
+html
+  head
+    title Timer
+    link(rel='stylesheet', href='/style.css')
+    script(src='/functions.js')
+  body
+    table(width='80%', align='center')
+      tr
+        td(colspan=8, id='message', class='hint') -
+      tr
+        td(id='d5', class='digit') -
+        td(id='d4', class='digit') -
+        td(id='c1', class='colon') -
+        td(id='d3', class='digit') -
+        td(id='d2', class='digit') -
+        td(id='c0', class='colon') -
+        td(id='d1', class='digit') -
+        td(id='d0', class='digit') -
+      tr
+        td(colspan=4, class='hint right', id='hinttext') -
+        td(class='hint', id='hints') -
+        td(colspan=3)
+      tr
+        td(colspan=4, class='hint right', id='opphinttext') -
+        td(class='hint', id='opphints') -
+        td(colspan=3)
+    div(id='inic')
+      p(onclick='startClient(1)', class='green pointer') Zold vagyok
+      p(onclick='startClient(2)', class='red pointer') Piros vagyok
