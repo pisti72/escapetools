@@ -19,6 +19,7 @@ const MAXHINTS = 3
 const MAXTOP = 12
 const ONEHOUR = 60 * 60 * 1000
 const FIVEMINUTES = 5 * 60 * 1000
+const ONEMINUTES = 60 * 1000
 
 var status = ONSTART
 var startedAt = 0
@@ -81,8 +82,13 @@ app.get('/pause', (req, res) => {
     res.send('paused')
 })
 
-app.get('/increase', (req, res) => {
-    targetTime += FIVEMINUTES
+app.get('/inconemin', (req, res) => {
+    targetTime += ONEMINUTE
+    res.send('increased')
+})
+
+app.get('/deconemin', (req, res) => {
+    targetTime -= ONEMINUTE
     res.send('increased')
 })
 

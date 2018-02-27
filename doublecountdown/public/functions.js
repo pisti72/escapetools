@@ -78,8 +78,14 @@ function stop(n) {
     f('message').innerHTML = f('stopped').innerHTML;
 }
 
-function increase(n) {
-    fetch('/increase').then().catch(function (error) {
+function incOneMin() {
+    fetch('/inconemin').then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function decOneMin() {
+    fetch('/deconemin').then().catch(function (error) {
         console.log(error)
     })
 }
