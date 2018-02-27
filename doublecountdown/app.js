@@ -13,13 +13,13 @@ const ONSTART = 0
 const PAUSED = 1
 const ONSTOP = 2
 const PLAYING = 4
-const FINISHED1 = 5
-const FINISHED2 = 6
+const WEWON = 5
+const WELOSE = 6
 const MAXHINTS = 3
 const MAXTOP = 12
 const ONEHOUR = 60 * 60 * 1000
 const FIVEMINUTES = 5 * 60 * 1000
-const ONEMINUTES = 60 * 1000
+const ONEMINUTE = 60 * 1000
 
 texts.hu.versionnr = texts.en.versionnr = package.version
 
@@ -31,13 +31,11 @@ function Player() {
     this.pausedAt = 0
     this.targetTime = 0
     this.text
-    this.txtStartsoon = ''
-    this.txtPaused = ''
-    this.txtHints = ''
-    this.txtOpponenthints = ''
     this.inicGame = function () {
-        this.hint = 0
-        this.status = ONSTART
+        if (this.status == WEWON || this.status == WELOSE) {
+            this.hint = 0
+            this.status = ONSTART
+        }
     }
     this.setText = function (text) {
         this.text = text
@@ -60,6 +58,20 @@ function Player() {
             this.targetTime = d.getTime() + this.pausedAt
         }
     }
+    this.wonGame = function () {
+        let d = new Date()
+        if (this.status == PLAYING) {
+            this.status = WEWON
+            this.pausedAt = this.targetTime - d.getTime()
+        }
+    }
+    this.loseGame = function () {
+        let d = new Date()
+        if (this.status == PLAYING) {
+            this.status = WELOSE
+            this.pausedAt = this.targetTime - d.getTime()
+        }
+    }
     this.incHint = function () {
         if (this.status == PLAYING) {
             this.hint++
@@ -72,6 +84,9 @@ function Player() {
                 this.hint = 0
             }
         }
+    }
+    this.addMin = function (n) {
+        this.targetTime += n * ONEMINUTE
     }
     this.getData = function () {
         var d = new Date()
@@ -96,8 +111,20 @@ function Player() {
             if (isHalf) {
                 this.message = this.text.paused
             }
-        } else if (this.thstatus == FINISHED1 || this.status == FINISHED2) {
-
+        } else if (this.status == WEWON) {
+            this.time = this.pausedAt
+            timeR = this.getReadable(this.time)
+            if (isHalf) {
+                this.message = this.text.wewon
+            }
+        } else if (this.status == WELOSE) {
+            this.time = this.pausedAt
+            timeR = this.getReadable(this.time)
+            if (isHalf) {
+                this.message = this.text.welose
+            }
+        } else {
+            this.message = this.text.error
         }
         return {
             message: this.message,
@@ -205,46 +232,65 @@ app.get('/pauseboth', (req, res) => {
     res.send('paused both')
 })
 
-app.get('/inconemin', (req, res) => {
-    targetTime += ONEMINUTE
-    res.send('increased')
+app.get('/incminboth', (req, res) => {
+    players[0].addMin(1)
+    players[1].addMin(1)
+    res.send('minutes increased')
 })
 
-app.get('/deconemin', (req, res) => {
-    targetTime -= ONEMINUTE
-    res.send('increased')
+app.get('/decminboth', (req, res) => {
+    players[0].addMin(-1)
+    players[1].addMin(-1)
+    res.send('minutes decreased')
 })
 
-app.get('/stop/:player', (req, res) => {
-    if (status == PLAYING) {
-        var d = new Date()
-        var player = req.params.player
-        pausedAt = targetTime - d.getTime()
-        if (player == 1) {
-            status = FINISHED1
-        } else {
-            status = FINISHED2
-        }
-        res.send('stopped')
+app.get('/incmin/:player', (req, res) => {
+    let p = req.params.player
+    players[p].addMin(1)
+    res.send('minutes increased : ' + p)
+})
+
+app.get('/decmin/:player', (req, res) => {
+    let p = req.params.player
+    players[p].addMin(-1)
+    res.send('minutes decreased : ' + p)
+})
+
+app.get('/won/:player', (req, res) => {
+    let p = req.params.player
+    if (p == 0) {
+        players[0].wonGame()
+        players[1].loseGame()
     } else {
-        res.send('only in playing')
+        players[1].wonGame()
+        players[0].loseGame()
     }
+    res.send('finished')
 })
 
-app.get('/setlang/:lang', (req, res) => {
-    if (req.params.lang == 'hu') {
-        players[0].setText(texts.hu)
-        players[1].setText(texts.hu)
-        res.send('magyar')
-    } else if (req.params.lang == 'en') {
-        players[0].setText(texts.en)
-        players[1].setText(texts.en)
-        res.send('english')
-    } else {
-        res.send('no success')
-    }
+app.get('/sethunboth', (req, res) => {
+    players[0].setText(texts.hu)
+    players[1].setText(texts.hu)
+    res.send('magyar')
 })
 
+app.get('/sethun/:player', (req, res) => {
+    let p = req.params.player
+    players[p].setText(texts.hu)
+    res.send('magyar : ' + p)
+})
+
+app.get('/setengboth', (req, res) => {
+    players[0].setText(texts.en)
+    players[1].setText(texts.en)
+    res.send('angol')
+})
+
+app.get('/seteng/:player', (req, res) => {
+    let p = req.params.player
+    players[p].setText(texts.en)
+    res.send('angol : ' + p)
+})
 
 app.listen(PORT, () => console.log('Server listening on port ' + PORT + '!'))
 

@@ -11,11 +11,11 @@ var thread;
 var fullscreen = false;
 var client = 0;
 
-function startControl(){
+function startControl() {
     thread = setInterval('loopControl()', 101);
 }
 
-function loopControl(){
+function loopControl() {
     fetch('/getplayers').then(function (response) {
         return response.json()
     }).then(function (json) {
@@ -23,8 +23,8 @@ function loopControl(){
         f('redmessage').innerHTML = json[1].message;
         f('greentime').innerHTML = json[0].time;
         f('redtime').innerHTML = json[1].time;
-        f('greenhint').innerHTML = 'Segitseg: ' + json[0].hints;
-        f('redhint').innerHTML = 'Segitseg: ' + json[1].hints;
+        f('greenhint').innerHTML = json[0].hinttext + json[0].hints;
+        f('redhint').innerHTML = json[1].hinttext + json[1].hints;
     }).catch(function (error) {
         f('message').innerHTML = 'Connection lost';
     })
@@ -55,56 +55,104 @@ function getmyip() {
 
 }
 
-function hint(n) {
-    fetch('/givehint/' + (n - 1)).then().catch(function (error) {
+function incHint(n) {
+    fetch('/inchint/' + n).then().catch(function (error) {
         f('message').innerHTML = f('noconnection').innerHTML;
     })
-    f('message').innerHTML = f('hintgiven').innerHTML + n;
 }
 
-function setLang(n) {
-    fetch('/setlang/' + n).then().catch(function (error) {
+function decHint(n) {
+    fetch('/dechint/' + n).then().catch(function (error) {
         f('message').innerHTML = f('noconnection').innerHTML;
     })
-    f('message').innerHTML = f('hintgiven').innerHTML + n;
 }
 
-function start() {
+function startGame() {
     fetch('/startboth').then().catch(function (error) {
         f('message').innerHTML = f('noconnection').innerHTML;
     })
-    f('message').innerHTML = '';
 }
 
-function pause() {
-    fetch('/pause').then().catch(function (error) {
-        console.log(error)
+function startPlayer(n) {
+    fetch('/start/' + n).then().catch(function (error) {
+        f('message').innerHTML = f('noconnection').innerHTML;
     })
-    f('message').innerHTML = f('paused').innerHTML;
 }
 
-function inic() {
-    fetch('/inic').then().catch(function (error) {
-        console.log(error)
-    })
-    f('message').innerHTML = f('inicialized').innerHTML;
-}
-
-function stop(n) {
-    fetch('/stop/' + n).then().catch(function (error) {
-        console.log(error)
-    })
-    f('message').innerHTML = f('stopped').innerHTML;
-}
-
-function incOneMin() {
-    fetch('/inconemin').then().catch(function (error) {
+function pauseGame() {
+    fetch('/pauseboth').then().catch(function (error) {
         console.log(error)
     })
 }
 
-function decOneMin() {
-    fetch('/deconemin').then().catch(function (error) {
+function pausePlayer(n) {
+    fetch('/pause/' + n).then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function inicGame() {
+    fetch('/inicboth').then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function inic(n) {
+    fetch('/inic/' + n).then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function won(n) {
+    fetch('/won/' + n).then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function incMinGame() {
+    fetch('/incminboth').then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function decMinGame() {
+    fetch('/decminboth').then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function incMin(n) {
+    fetch('/incmin/' + n).then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function decMin(n) {
+    fetch('/decmin/' + n).then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function setHunGame() {
+    fetch('/sethunboth').then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function setHun(n) {
+    fetch('/sethun/' + n).then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function setEngGame() {
+    fetch('/setengboth').then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function setEng(n) {
+    fetch('/seteng/' + n).then().catch(function (error) {
         console.log(error)
     })
 }
@@ -114,7 +162,7 @@ function loopClient() {
         return response.json()
     }).then(function (json) {
         var time = json[client].time;
-        
+
         f('message').innerHTML = json[client].message;
 
         f('d5').innerHTML = time.substr(0, 1);
@@ -129,9 +177,9 @@ function loopClient() {
         f('hinttext').innerHTML = json[client].hinttext;
         f('hints').innerHTML = json[client].hints;
         f('opphinttext').innerHTML = json[client].opphinttext;
-        if(client == 0){
+        if (client == 0) {
             f('opphints').innerHTML = json[1].hints;
-        }else{
+        } else {
             f('opphints').innerHTML = json[0].hints;
         }
     }).catch(function (error) {
