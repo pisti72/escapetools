@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Game</title>
     <link rel="stylesheet" type="text/css" href="assets/style.css">
     <link rel="icon" type="image/png" href="assets/favicon.png" sizes="16x16">
@@ -11,6 +11,21 @@
 </head>
 
 <body>
+    <audio id="sndStart">
+        <source src="sounds/sndStart.ogg" type="audio/ogg">
+    </audio>
+    <audio id="sndFail">
+        <source src="sounds/sndFail.ogg" type="audio/ogg">
+    </audio>
+    <audio id="sndGameover">
+        <source src="sounds/sndGameover.ogg" type="audio/ogg">
+    </audio>
+    <audio id="sndSuccess">
+        <source src="sounds/sndSuccess.ogg" type="audio/ogg">
+    </audio>
+    <audio id="sndBtn">
+        <source src="sounds/sndBtn.ogg" type="audio/ogg">
+    </audio>
     <div id="onstart" align="center" style="margin:50px;">
         <img id="title" src="assets/pipegame_title.png" />
         <!--https://www.dafont.com/amazobitaemostrov.font?psize=s&text=Pipe+Game
@@ -38,10 +53,14 @@
         <div id="inputbox">Enter your name</div>
         <table id="keyboard" align="center"></table>
     </div>
-    <div id="topscore"></div>
+    <div id="topscore">
+        <h1 id="topscore_title">Top score</h2>
+            <div id="list1"></div>
+            <div id="list2"></div>
+    </div>
 
     <div id="fullscreen" onclick="toggleFullScreen()">n</div>
-    
+
     <script>
         initGame();
     </script>

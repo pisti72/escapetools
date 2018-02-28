@@ -23,7 +23,7 @@ body{
     font-family: inova;
     background-color: black;
     color: rgb(255, 155, 41);
-    font-size: 2em;
+    font-size: 9vh;
     margin:0px;
     width:100%;
 }
@@ -33,11 +33,26 @@ h1, h2, h3{
     color: rgb(250, 102, 17);
 }
 
+h1{
+    font-size: 10vh;
+}
+
+h2{
+    font-size: 6vh;
+}
+
 table {
     width: 80%;
     text-align: center;
 }
 
+.cell{
+    font-size: 5vh;
+}
+
+.row{
+    font-size: 5vh;
+}
 /* unvisited link */
 a:link {
     color: yellow;;
@@ -69,18 +84,18 @@ a:active {
 }
 
 .digits{
-    font-size: 4em;
+    font-size: 30vh;
     width: 14%;
 }
 
 .dots{
-    font-size: 3em;
+    font-size: 20vh;
     width: 8%;
 }
 
 #gameinfo{
     text-align: center;
-    font-size: 2em;
+    font-size: 10vh;
     height:50px;
 }
 
@@ -104,6 +119,7 @@ a:active {
     padding: 4px;
     cursor: pointer;
     width: 10%;
+    font-size: 5vh;
 }
 
 .btnt{
@@ -112,6 +128,7 @@ a:active {
     margin: 10px;
     width: max-content;
     cursor: pointer;
+    font-size: 4vh;
 }
 
 .btnt:hover{

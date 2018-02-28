@@ -7,6 +7,7 @@
     <title>Testing</title>
     <link rel="stylesheet" type="text/css" href="assets/style.css">
     <link rel="icon" type="image/png" href="assets/favicon.png" sizes="16x16">
+    <script src="game.js"></script>
 </head>
 
 <body>
@@ -18,32 +19,6 @@
     <br>
     <p onclick="getIp(3)" class="btnt">Get address</p>
     <div id="message"></div>
-    <script>
-        function setStatus(s) {
-            fetch('/setRingStatus/' + s).then(function (response) {
-                return response.json();
-                throw new TypeError("Oops, we haven't got JSON!");
-            })
-                .then(function (json) {
-                    f('message').innerHTML = json.oldstatus + ' -> ' + json.newstatus
-                })
-                .catch(function (error) { console.log(error); });
-        }
-        function getIp(s) {
-            fetch('/getip').then(function (response) {
-                return response.json();
-                throw new TypeError("Oops, we haven't got JSON!");
-            })
-                .then(function (json) {
-                    f('message').innerHTML = 'http://' + json.ip + ':' + json.port;
-                })
-                .catch(function (error) { console.log(error); });
-        }
-
-        function f(i) {
-            return document.getElementById(i);
-        }
-    </script>
 </body>
 
 </html>

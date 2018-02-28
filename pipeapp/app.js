@@ -9,6 +9,7 @@
  * - highscore visible on 7 inch monitor too
  * - results which are older then 3 montch should not be shown
  * - settings: ideas needed
+ * - sound to fail, success, gameover
  * 
  * 
  * 
@@ -26,7 +27,7 @@ const INGAME = 4
 const GAMEOVER = 5
 const GAMEFINISHED = 6
 const MAXLIVES = 3
-const MAXTOP = 12
+const MAXTOP = 20
 
 var path = require('path')
 const fs = require('fs')
@@ -39,6 +40,8 @@ var stoppedAt
 var lives = MAXLIVES
 var ringStatus = ONSTART
 var gameStatus = ONSTART
+
+var sound = 'none'
 
 var gpio4 = gpio.export(4, {
     direction: "in",
@@ -158,7 +161,15 @@ app.get('/getgamedata', function (req, res) {
     //TEST
     //time = 999999;
     //gameStatus = GAMEFINISHED;
-    var response = { time: getReadable(time), ms: time, lives: lives, maxlives: MAXLIVES, status: gameStatus }
+    var response = { 
+        time: getReadable(time), 
+        ms: time, 
+        lives: lives, 
+        maxlives: MAXLIVES, 
+        status: gameStatus,
+        sound: sound
+    }
+    sound = 'none'
     res.send(JSON.stringify(response))
 })
 
@@ -183,6 +194,9 @@ function setRingStatus(status) {
             gameStatus = GAMEOVER
             var d = new Date()
             stoppedAt = d.getTime()
+            sound = 'gameover'
+        }else{
+            sound = 'failed'
         }
     } else if (ringStatus == INAIR && status == ONSTART) {
         lives = MAXLIVES
@@ -191,6 +205,7 @@ function setRingStatus(status) {
         var d = new Date()
         stoppedAt = d.getTime()
         gameStatus = GAMEFINISHED
+        sound = 'success'
     } else {
         console.log('WARNING!!! Not handled event: ' + ringStatus + ' -> ' + status)
     }
@@ -198,8 +213,10 @@ function setRingStatus(status) {
     console.log('Ring status changed to --> ' + ringStatus)
 }
 
-app.get('/gethighscore', function (req, res) {
-    let top = db.slice(0, MAXTOP)
+app.get('/gethighscore/:from/:to', function (req, res) {
+    let from = req.params.from
+    let to = req.params.to
+    let top = db.slice(from, to)
     res.send(JSON.stringify(top))
 })
 
@@ -226,6 +243,7 @@ function inicDb() {
             for (let i = 0; i < MAXTOP; i++) {
                 db.push(
                     {
+                        id: i + 1,
                         timeHuman: getReadable(0),
                         time: 1e9,
                         name: 'MYSTIQUE',
@@ -248,13 +266,19 @@ function insertRow(time, name) {
     var timestamp = d.getTime()
     db.push(
         {
+            id: 0,
             timeHuman: getReadable(time * 1),
             time: time * 1,
             name: name,
             timestamp: getHHHHMMDDfromTimestamp(timestamp)
         }
     )
+    //order by time asc
     db.sort(compare)
+    //renumber id
+    for (let i = 0; i < db.length; i++) {
+        db[i].id = i + 1;
+    }
     let data = JSON.stringify(db, null, 2);
     fs.writeFileSync(DBFILE, data);
 }
@@ -273,6 +297,7 @@ function gameStarted() {
     ringStatus = INAIR
     lives = MAXLIVES
     startedAt = d.getTime()
+    sound = 'started'
 }
 
 function getReadable(time) {

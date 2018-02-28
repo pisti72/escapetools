@@ -5,12 +5,11 @@ const GAMEFINISHED = 6;
 const EMPTY = '';
 const FULLSCREENON = 'n';
 const FULLSCREENOFF = 'o';
-const BASEURL = 'http://localhost:3000';
 const SPACE = 'SPACE';
 const END = 'END';
 const DEL = 'DEL';
-const ERROR = 'Server connection ERROR!';
-const MAXLENGTH = 12;
+const ERROR = 'No connection!';
+const MAXLENGTH = 16;
 
 var fullscreen = false;
 var counter = 0;
@@ -18,13 +17,32 @@ var name = EMPTY;
 var time = EMPTY;
 var ms = 0;
 
+//audio components
+var sndStart;
+var sndFail;
+var sndGameover;
+var sndSuccess;
+var sndBtn;
+
 function initGame() {
     document.body.style.cursor = 'none';
+
+    sndStart = f('sndStart');
+    sndFail = f('sndFail');
+    sndGameover = f('sndGameover');
+    sndSuccess = f('sndSuccess');
+    sndBtn = f('sndBtn');
+
+    sndStart.play();
 
     f('onstart').style.display = 'block';
     f('ingame').style.display = 'none';
     f('inputname').style.display = 'none';
     renderKeyboard();
+    fetchHighscore();
+    document.body.addEventListener("touchstart", function (e) {
+        e.preventDefault();
+    })
     document.body.addEventListener('keydown', function (e) {
         if (e.keyCode == 13) {
             toggleFullScreen();
@@ -66,6 +84,7 @@ function renderKeyboard() {
 }
 
 function btnPressed(i) {
+    sndBtn.play();
     if (i == DEL) {
         if (name.length != 0) {
             name = name.substring(0, name.length - 1);
@@ -74,6 +93,7 @@ function btnPressed(i) {
         name += ' ';
     } else if (i == END) {
         endPressed();
+        fetchHighscore();
     } else {
         name += i;
     }
@@ -97,29 +117,64 @@ function fetchingGamedata() {
         throw new TypeError("Oops, we haven't got JSON!");
     })
         .then(function (json) {
+            if(json.sound == 'started'){
+                sndStart.play()
+            }else if(json.sound == 'failed'){
+                sndFail.play()
+            }else if(json.sound == 'gameover'){
+                sndGameover.play()
+            }else if(json.sound == 'success'){
+                sndSuccess.play()
+            }
             if (json.status == ONSTART) {
-                f('onstart').style.display = 'block';
+
                 f('ingame').style.display = 'none';
                 f('inputname').style.display = 'none';
+                if (counter % 200 > 100) {
+                    f('onstart').style.display = 'block';
+                    f('topscore').style.display = 'none';
+                    //if ([1, 4, 6, 7, 8, 9, 10, 12, 15].includes(counter % 20)) {
+                    if (counter % 10 < 8) {
+                        f('title').style.visibility = 'visible';
+                    } else {
+                        f('title').style.visibility = 'hidden';
+                    }
 
-                if ([1, 4, 6, 7, 8, 9, 10, 12, 15].includes(counter % 20)) {
-                    f('title').style.visibility = 'visible';
-                } else {
-                    f('title').style.visibility = 'hidden';
-                }
+                    var c = counter % 60;
 
-                if (counter % 30 > 15) {
-                    f('titleinfo').innerHTML = 'Grab the ring to play';
+                    if (c < 20) {
+                        f('titleinfo').innerHTML = 'Grab the ring to play';
+                    } else if (c >= 20 && c < 40) {
+                        f('titleinfo').innerHTML = '(C)2018 Mystiqueroom';
+                    } else {
+                        f('titleinfo').innerHTML = 'Inditashoz vedd le a gyurut';
+                    }
                 } else {
-                    f('titleinfo').innerHTML = '(C)2018 Mystiqueroom';
+                    f('onstart').style.display = 'none';
+                    f('topscore').style.display = 'block';
+                    //Blinking title
+                    if (counter % 10 < 5) {
+                        f('topscore_title').style.visibility = 'visible';
+                    } else {
+                        f('topscore_title').style.visibility = 'hidden';
+                    }
+                    //Paging scores
+                    if (counter % 100 < 50) {
+                        f('list1').style.display = 'block';
+                        f('list2').style.display = 'none';
+                    } else {
+                        f('list1').style.display = 'none';
+                        f('list2').style.display = 'block';
+                    }
                 }
             } else if (json.status == INGAME || json.status == GAMEOVER) {
                 f('inputbox').innerHTML = 'Enter your name';
                 name = EMPTY
-
                 f('onstart').style.display = 'none';
                 f('ingame').style.display = 'block';
                 f('inputname').style.display = 'none';
+                f('topscore').style.display = 'none';
+
                 let s = '<table align="center" width="50%"><tr>';
                 for (let i = 0; i < json.lives; i++) {
                     s += '<td><img src="assets/heart_dot_red.svg" height="120px"/></td>';
@@ -150,6 +205,7 @@ function fetchingGamedata() {
                 f('ingame').style.display = 'none';
                 f('onstart').style.display = 'none';
                 f('inputname').style.display = 'block';
+                f('topscore').style.display = 'none';
                 ms = json.ms;
                 time = json.time;
                 f('time').innerHTML = time;
@@ -163,7 +219,7 @@ function fetchingGamedata() {
         });
 }
 function fetchingHighscore() {
-    fetch('/gethighscore').then(function (response) {
+    fetch('/gethighscore/0/13').then(function (response) {
         return response.json();
         throw new TypeError("Oops, we haven't got JSON!");
     })
@@ -171,14 +227,49 @@ function fetchingHighscore() {
             let s = '<table align="center">';
             for (let i = 0; i < json.length; i++) {
                 s += '<tr>';
-                s += '<td>' + (i + 1) + '.</td>';
-                s += '<td>' + json[i].timeHuman + '</td>';
-                s += '<td>' + json[i].name + '</td>';
-                s += '<td>' + json[i].timestamp + '</td>';
+                s += '<td width="10%" class="row">' + json[i].id + '.</td>';
+                s += '<td width="20%" class="row">' + json[i].timeHuman + '</td>';
+                s += '<td width="50%" class="row">' + json[i].name + '</td>';
+                s += '<td width="20%" class="row">' + json[i].timestamp + '</td>';
                 s += '</tr>';
             }
             s += '</table>';
             f('list').innerHTML = s;
+        })
+        .catch(function (error) {
+            f('list').innerHTML = ERROR;
+        });
+}
+function fetchHighscore() {
+    fetch('/gethighscore/0/12').then(function (response) {
+        return response.json();
+        throw new TypeError("Oops, we haven't got JSON!");
+    })
+        .then(function (json) {
+            //First page
+            let s = '<table align="center">';
+            for (let i = 0; i < 6; i++) {
+                s += '<tr>';
+                s += '<td width="10%" class="cell">' + json[i].id + '.</td>';
+                s += '<td width="20%" class="cell">' + json[i].timeHuman + '</td>';
+                s += '<td width="50%" class="cell">' + json[i].name + '</td>';
+                s += '<td width="20%" class="cell">' + json[i].timestamp + '</td>';
+                s += '</tr>';
+            }
+            s += '</table>';
+            f('list1').innerHTML = s;
+            //Second page
+            s = '<table align="center">';
+            for (let i = 6; i < json.length; i++) {
+                s += '<tr>';
+                s += '<td width="10%" class="cell">' + json[i].id + '.</td>';
+                s += '<td width="20%" class="cell">' + json[i].timeHuman + '</td>';
+                s += '<td width="50%" class="cell">' + json[i].name + '</td>';
+                s += '<td width="20%" class="cell">' + json[i].timestamp + '</td>';
+                s += '</tr>';
+            }
+            s += '</table>';
+            f('list2').innerHTML = s;
         })
         .catch(function (error) {
             f('list').innerHTML = ERROR;
@@ -217,6 +308,26 @@ function toggleFullScreen() {
             }
         }
     }
+}
+function setStatus(s) {
+    fetch('/setRingStatus/' + s).then(function (response) {
+        return response.json();
+        throw new TypeError("Oops, we haven't got JSON!");
+    })
+        .then(function (json) {
+            f('message').innerHTML = json.oldstatus + ' -> ' + json.newstatus
+        })
+        .catch(function (error) { console.log(error); });
+}
+function getIp(s) {
+    fetch('/getip').then(function (response) {
+        return response.json();
+        throw new TypeError("Oops, we haven't got JSON!");
+    })
+        .then(function (json) {
+            f('message').innerHTML = 'http://' + json.ip + ':' + json.port;
+        })
+        .catch(function (error) { console.log(error); });
 }
 function f(i) {
     return document.getElementById(i);
