@@ -14,24 +14,33 @@ const MAXLENGTH = 12;
 
 var fullscreen = false;
 var counter = 0;
-var interval = setInterval(fetching, 71);
 var name = EMPTY;
 var time = EMPTY;
 var ms = 0;
 
-document.body.style.cursor = 'none';
+function initGame() {
+    document.body.style.cursor = 'none';
 
-f('onstart').style.display = 'block';
-f('ingame').style.display = 'none';
-f('inputname').style.display = 'none';
-document.body.addEventListener('keydown', function (e) {
-    if (e.keyCode == 13) {
-        toggleFullScreen();
-    }
-});
+    f('onstart').style.display = 'block';
+    f('ingame').style.display = 'none';
+    f('inputname').style.display = 'none';
+    renderKeyboard();
+    document.body.addEventListener('keydown', function (e) {
+        if (e.keyCode == 13) {
+            toggleFullScreen();
+        }
+    });
+    setInterval(fetchingGamedata, 71);
+}
 
-//getFinalResult();
-renderKeyboard();
+function initHighscore() {
+    document.body.addEventListener('keydown', function (e) {
+        if (e.keyCode == 13) {
+            toggleFullScreen();
+        }
+    });
+    setInterval(fetchingHighscore, 1000);
+}
 
 function renderKeyboard() {
     var layout = [['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
@@ -82,7 +91,7 @@ function endPressed() {
         .catch(function (error) { console.log(error); });
 }
 
-function fetching() {
+function fetchingGamedata() {
     fetch('/getgamedata').then(function (response) {
         return response.json();
         throw new TypeError("Oops, we haven't got JSON!");
@@ -151,6 +160,28 @@ function fetching() {
             f('gameinfo').innerHTML = ERROR;
             f('titleinfo').innerHTML = ERROR;
             f('inputname').innerHTML = ERROR;
+        });
+}
+function fetchingHighscore() {
+    fetch('/gethighscore').then(function (response) {
+        return response.json();
+        throw new TypeError("Oops, we haven't got JSON!");
+    })
+        .then(function (json) {
+            let s = '<table align="center">';
+            for (let i = 0; i < json.length; i++) {
+                s += '<tr>';
+                s += '<td>' + (i + 1) + '.</td>';
+                s += '<td>' + json[i].timeHuman + '</td>';
+                s += '<td>' + json[i].name + '</td>';
+                s += '<td>' + json[i].timestamp + '</td>';
+                s += '</tr>';
+            }
+            s += '</table>';
+            f('list').innerHTML = s;
+        })
+        .catch(function (error) {
+            f('list').innerHTML = ERROR;
         });
 }
 function toggleFullScreen() {
