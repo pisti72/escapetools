@@ -21,6 +21,15 @@ hdmi_mode=87
 hdmi_cvt 800 480 60 6 0 0 0
 hdmi_drive=1
 
+or
+
+dmi_force_hotplug=1
+hdmi_group=2
+hdmi_mode=1
+hdmi_mode=87
+hdmi_cvt 1024 600 60 6 0 0 0
+hdmi_drive=1
+
 
 http://www.raspberry-projects.com/pi/pi-operating-systems/raspbian/gui/disable-screen-sleep
 sudo nano /etc/lightdm/lightdm.conf
