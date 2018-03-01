@@ -34,7 +34,6 @@ hdmi_drive=1
 http://www.raspberry-projects.com/pi/pi-operating-systems/raspbian/gui/disable-screen-sleep
 sudo nano /etc/lightdm/lightdm.conf
 Add the following lines to the [SeatDefaults] section: 
-[code]
+
 # don't sleep the screen
 xserver-command=X -s 0 dpms
-[/code]

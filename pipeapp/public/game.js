@@ -92,6 +92,7 @@ function btnPressed(i) {
     } else if (i == SPACE) {
         name += ' ';
     } else if (i == END) {
+        counter = 0;
         endPressed();
         fetchHighscore();
     } else {
@@ -130,7 +131,7 @@ function fetchingGamedata() {
 
                 f('ingame').style.display = 'none';
                 f('inputname').style.display = 'none';
-                if (counter % 200 > 100) {
+                if (counter % 200 < 100) {
                     f('onstart').style.display = 'block';
                     f('topscore').style.display = 'none';
                     //if ([1, 4, 6, 7, 8, 9, 10, 12, 15].includes(counter % 20)) {
