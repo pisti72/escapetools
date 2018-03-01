@@ -69,7 +69,7 @@ inicDb()
 gpio4.on("change", function (val) {
     // value will report either 1 or 0 (number) when the value changes
     console.log('GPIO 4 (START) : ' + val)
-    if (val == 0) {
+    if (val == 1) {
         setRingStatus(INAIR)
     } else {
         setRingStatus(ONSTART)
@@ -81,7 +81,7 @@ gpio4.on("change", function (val) {
 gpio5.on("change", function (val) {
     // value will report either 1 or 0 (number) when the value changes
     console.log('GPIO 5 (PIPE) : ' + val)
-    if (val == 0) {
+    if (val == 1) {
         setRingStatus(INAIR)
     } else {
         setRingStatus(ONPIPE)
@@ -93,7 +93,7 @@ gpio5.on("change", function (val) {
 gpio6.on("change", function (val) {
     // value will report either 1 or 0 (number) when the value changes
     console.log('GPIO 6 (FINISH) : ' + val)
-    if (val == 0) {
+    if (val == 1) {
         setRingStatus(INAIR)
     } else {
         setRingStatus(ONSTOP)
