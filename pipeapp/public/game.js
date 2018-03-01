@@ -135,9 +135,9 @@ function fetchingGamedata() {
                     f('topscore').style.display = 'none';
                     //if ([1, 4, 6, 7, 8, 9, 10, 12, 15].includes(counter % 20)) {
                     if (counter % 10 < 8) {
-                        f('title').style.visibility = 'visible';
+                        f('titleimg').style.visibility = 'visible';
                     } else {
-                        f('title').style.visibility = 'hidden';
+                        f('titleimg').style.visibility = 'hidden';
                     }
 
                     var c = counter % 60;

@@ -3,6 +3,7 @@
  * @author Istvan Szalontai istvan.szalontai12Ggmail.com
  * @description Business logic and frondend pipe game for escape room
  * @created 2018/01/31
+ * @finshed 2018/03/01
  * 
  * TODO
  * - paginable high score
@@ -16,6 +17,7 @@
  * 
  */
 const express = require('express')
+const package = require('./package.json')
 const app = express()
 const PORT = 3000
 const DBFILE = 'db/hiscore.json'
@@ -223,7 +225,7 @@ app.get('/gethighscore/:from/:to', function (req, res) {
     res.send(JSON.stringify(top))
 })
 
-app.listen(PORT, () => console.log('Server listening on port ' + PORT + '!'))
+app.listen(PORT, () => console.log(package.name + ' server listening on port ' + PORT + '!'))
 
 function getHHHHMMDDfromTimestamp(date) {
     var d = new Date(date)

@@ -26,6 +26,13 @@ body{
     font-size: 9vh;
     margin:0px;
     width:100%;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 h1, h2, h3{
     text-align: center;
@@ -47,7 +54,7 @@ table {
 }
 
 .cell{
-    font-size: 5vh;
+    font-size: 6vh;
 }
 
 .row{
@@ -99,6 +106,10 @@ a:active {
     height:50px;
 }
 
+#titleimg{
+    margin-top:20vh;
+}
+
 #titleinfo{
     text-align: center;
     height:50px;
@@ -111,7 +122,7 @@ a:active {
     padding: 10px;
     width: 50%;
     margin-bottom: 20px;
-    height: 40px;
+    height: 8vh;
 }
 
 .btn {
@@ -119,7 +130,7 @@ a:active {
     padding: 4px;
     cursor: pointer;
     width: 10%;
-    font-size: 5vh;
+    font-size: 6vh;
 }
 
 .btnt{
