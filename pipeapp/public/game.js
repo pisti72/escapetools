@@ -23,6 +23,8 @@ var sndFail;
 var sndGameover;
 var sndSuccess;
 var sndBtn;
+var sndDel;
+var sndEnd;
 
 function initGame() {
     document.body.style.cursor = 'none';
@@ -32,6 +34,8 @@ function initGame() {
     sndGameover = f('sndGameover');
     sndSuccess = f('sndSuccess');
     sndBtn = f('sndBtn');
+    sndDel = f('sndDel');
+    sndEnd = f('sndEnd');
 
     sndStart.play();
 
@@ -86,13 +90,15 @@ function renderKeyboard() {
 function btnPressed(i) {
     sndBtn.play();
     if (i == DEL) {
+        sndDel.play();
         if (name.length != 0) {
             name = name.substring(0, name.length - 1);
         }
     } else if (i == SPACE) {
         name += ' ';
     } else if (i == END) {
-        counter = 0;
+        sndEnd.play();
+        counter = 50;
         endPressed();
         fetchHighscore();
     } else {
