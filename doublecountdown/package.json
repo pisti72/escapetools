@@ -1,5 +1,5 @@
 {
-  "name": "syncedcountdown",
+  "name": "double_countdown",
   "version": "0.1.0",
   "description": "Two server controlled digital countdown extended with hint counter",
   "main": "app.js",

@@ -102,7 +102,7 @@ function Player() {
             }
         } else if (this.status == PLAYING) {
             this.time = this.targetTime - d.getTime()
-            if(this.time < 0){
+            if (this.time < 0) {
                 this.time = 0
                 this.status = OUTOFTIME
             }
@@ -278,12 +278,12 @@ app.get('/won/:player', (req, res) => {
     let p = req.params.player
     if (p == 0) {
         players[0].wonGame()
-        if(!isSeparate){
+        if (!isSeparate) {
             players[1].loseGame()
         }
     } else {
         players[1].wonGame()
-        if(!isSeparate){
+        if (!isSeparate) {
             players[0].loseGame()
         }
     }
@@ -314,7 +314,7 @@ app.get('/seteng/:player', (req, res) => {
     res.send('angol : ' + p)
 })
 
-app.listen(PORT, () => console.log('Server listening on port ' + PORT + '!'))
+app.listen(PORT, () => console.log(package.name + ' server listening on port ' + PORT + '!'))
 
 
 /**
