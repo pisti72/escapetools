@@ -88,13 +88,13 @@ function renderKeyboard() {
 }
 
 function btnPressed(i) {
-    sndBtn.play();
     if (i == DEL) {
         sndDel.play();
         if (name.length != 0) {
             name = name.substring(0, name.length - 1);
         }
     } else if (i == SPACE) {
+        sndBtn.play();
         name += ' ';
     } else if (i == END) {
         sndEnd.play();
@@ -102,6 +102,7 @@ function btnPressed(i) {
         endPressed();
         fetchHighscore();
     } else {
+        sndBtn.play();
         name += i;
     }
     if (name.length > MAXLENGTH) {
