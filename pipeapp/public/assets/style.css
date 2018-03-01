@@ -41,7 +41,7 @@ h1, h2, h3{
 }
 
 h1{
-    font-size: 10vh;
+    font-size: 12vh;
 }
 
 h2{
@@ -54,7 +54,7 @@ table {
 }
 
 .cell{
-    font-size: 6vh;
+    font-size: 7vh;
 }
 
 .row{
@@ -104,15 +104,21 @@ a:active {
     text-align: center;
     font-size: 10vh;
     height:50px;
+    margin-top:10vh;
 }
 
 #titleimg{
     margin-top:20vh;
+    width:95%;
 }
 
 #titleinfo{
     text-align: center;
     height:50px;
+}
+
+#heart{
+    margin-top:10vh;
 }
 
 #inputbox{
@@ -122,7 +128,7 @@ a:active {
     padding: 10px;
     width: 50%;
     margin-bottom: 20px;
-    height: 8vh;
+    height: 10vh;
 }
 
 .btn {
@@ -130,7 +136,7 @@ a:active {
     padding: 4px;
     cursor: pointer;
     width: 10%;
-    font-size: 6vh;
+    font-size: 7vh;
 }
 
 .btnt{
