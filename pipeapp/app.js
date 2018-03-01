@@ -67,18 +67,20 @@ var gpio6 = gpio.export(4, {
 inicDb()
 
 gpio4.on("change", function (val) {
-    // value will report either 1 or 0 (number) when the value changes 
+    // value will report either 1 or 0 (number) when the value changes
+    console.log('GPIO 4 (START) : ' + val)
     if (val == 0) {
         setRingStatus(INAIR)
     } else {
         setRingStatus(ONSTART)
     }
 
-    console.log(val)
+
 });
 
 gpio5.on("change", function (val) {
-    // value will report either 1 or 0 (number) when the value changes 
+    // value will report either 1 or 0 (number) when the value changes
+    console.log('GPIO 5 (PIPE) : ' + val)
     if (val == 0) {
         setRingStatus(INAIR)
     } else {
@@ -89,7 +91,8 @@ gpio5.on("change", function (val) {
 });
 
 gpio6.on("change", function (val) {
-    // value will report either 1 or 0 (number) when the value changes 
+    // value will report either 1 or 0 (number) when the value changes
+    console.log('GPIO 6 (FINISH) : ' + val)
     if (val == 0) {
         setRingStatus(INAIR)
     } else {
@@ -161,11 +164,11 @@ app.get('/getgamedata', function (req, res) {
     //TEST
     //time = 999999;
     //gameStatus = GAMEFINISHED;
-    var response = { 
-        time: getReadable(time), 
-        ms: time, 
-        lives: lives, 
-        maxlives: MAXLIVES, 
+    var response = {
+        time: getReadable(time),
+        ms: time,
+        lives: lives,
+        maxlives: MAXLIVES,
         status: gameStatus,
         sound: sound
     }
@@ -195,7 +198,7 @@ function setRingStatus(status) {
             var d = new Date()
             stoppedAt = d.getTime()
             sound = 'gameover'
-        }else{
+        } else {
             sound = 'failed'
         }
     } else if (ringStatus == INAIR && status == ONSTART) {
