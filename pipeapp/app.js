@@ -46,21 +46,21 @@ var sound = 'none'
 var gpio4 = gpio.export(4, {
     direction: "in",
     ready: function () {
-        console.log('Init position on set')
+        console.log('Init position on set GPIO4')
     }
 });
 
-var gpio5 = gpio.export(4, {
+var gpio5 = gpio.export(5, {
     direction: "in",
     ready: function () {
-        console.log('Init position on set')
+        console.log('Init position on set GPIO5')
     }
 });
 
-var gpio6 = gpio.export(4, {
+var gpio6 = gpio.export(6, {
     direction: "in",
     ready: function () {
-        console.log('Init position on set')
+        console.log('Init position on set GPIO6')
     }
 });
 
