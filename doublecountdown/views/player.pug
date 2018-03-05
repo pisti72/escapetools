@@ -3,12 +3,13 @@ doctype
 html
   head
     title Timer
-    link(rel='stylesheet', href='/style.css')
+    link(rel='stylesheet', href='/css/style.css')
     script(src='/functions.js')
   body
     table(width='95%', align='center', border=0)
       tr
-        td(colspan=8, id='message', class='hint') -
+        td(colspan=8)
+          p(id='message', class='ply_message') -
       tr
         td(id='d5', class='digit') -
         td(id='d4', class='digit') -
@@ -19,12 +20,16 @@ html
         td(id='d1', class='digit') -
         td(id='d0', class='digit') -
       tr
-        td(colspan=6, class='hint', id='hinttext') -
-        td(class='hint', id='hints') -
+        td(colspan=6)
+          p(class='hint', id='hinttext') -
+        td
+          p(class='hint', id='hints') -
         td
       tr
-        td(colspan=6, class='hint', id='opphinttext') -
-        td(class='hint', id='opphints') -
+        td(colspan=6)
+          p(class='hint', id='opphinttext') -
+        td
+          p(class='hint', id='opphints') -
         td
     div(id='inic')
       button(onclick='startClient(0)', class='btn bg_green') Zold vagyok

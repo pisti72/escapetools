@@ -1,6 +1,6 @@
 @font-face {
     font-family: digital7;
-    src: url("fonts/digital-7 (italic).ttf");
+    src: url("../fonts/digital-7 (italic).ttf");
 }
 
 body{
@@ -14,19 +14,14 @@ h1{
     text-align: center;
 }
 table{
-    margin-top:50px;
-}
-li{
-    margin: 5px;
-    cursor: pointer;
+    margin-top:10vh;
 }
 
-#client, #translations{
-    display: none;
-}
 
-#message{
-    height: 10vh;
+.ply_message{
+    min-height: 10vh;
+    font-size: 10vh;
+    padding-top: 2vh;
     text-align: center;
 }
 
@@ -42,7 +37,7 @@ li{
     width: 5%;
 }
 .hint{
-    padding-top: 2vh;
+    padding-top: 5vh;
     text-align: right;
     font-size: 10vh;
 }
@@ -59,30 +54,23 @@ li{
     cursor: pointer;
 }
 
-#version, #inic{
-    position: fixed;
-    right: 0px;
-    bottom: 0px;
-}
-
-#redmessage, #redtime, #redhint{
-    text-align: center;
-    color: #f00;
-    height: 10vh;
-}
-
-#greentime, #greenmessage, #greenhint{
-    text-align: center;
-    color: #0f0;
-    height: 10vh;
-}
-
-#redmessage,#redhint, #greenmessage, #greenhint{
+p{
+    min-height: 8vh;
     font-size: 5vh;
+    margin: 0px;
+}
+
+.text-green{
+    color: #0f0;
+}
+
+.text-red{
+    color: red;
 }
 
 #redtime, #greentime{
     font-size: 10vh;
+    min-height: 10vh;
 }
 
 .btn{

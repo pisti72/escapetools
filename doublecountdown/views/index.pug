@@ -3,55 +3,71 @@ doctype
 html
   head
     title= title
-    link(rel='stylesheet', href='/style.css')
+    link(rel='stylesheet', href='/css/w3.css')
+    link(rel='stylesheet', href='/css/style.css')
+    
     script(src='/functions.js')
   body
-    h1= title
-    table(width='80%',align='center')
-      tr
-        td(id='redmessage',width='45%') -
-        td(width='10%',rowspan='4',align='center')
-          button(onclick='inicGame()', class='btn bg_yellow') Inic
-          button(onclick='startGame()', class='btn bg_yellow') Start
-          button(onclick='pauseGame()', class='btn bg_yellow') Pause
-          button(onclick='incMinGame()', class='btn bg_yellow') +1 perc
-          button(onclick='decMinGame()', class='btn bg_yellow') -1 perc
-          button(onclick='setHunGame()', class='btn bg_yellow') Magyar
-          button(onclick='setEngGame()', class='btn bg_yellow') Angol
-          button(onclick='getmyip()', class='btn bg_yellow') Get Server IP
-        td(id='greenmessage',width='45%') -
-      tr
-        td(id='redtime') -
-        td(id='greentime') -
-      tr
-        td(id='redhint') -
-        td(id='greenhint') -
-      tr
-        td(align='center')
-          button(onclick='inic(1)', class='btn bg_red') Inic
-          button(onclick='startPlayer(1)', class='btn bg_red') Start
-          button(onclick='pausePlayer(1)', class='btn bg_red') Pause
-          button(onclick='incMin(1)', class='btn bg_red') +1 perc
-          button(onclick='decMin(1)', class='btn bg_red') -1 perc
-          button(onclick='incHint(1)', class='btn bg_red') Segitseg +
-          button(onclick='decHint(1)', class='btn bg_red') Segitseg -
-          button(onclick='won(1)', class='btn bg_red') Nyert
-          button(onclick='setHun(1)', class='btn bg_red') Magyar
-          button(onclick='setEng(1)', class='btn bg_red') Angol  
-        td(align='center')
-          button(onclick='inic(0)', class='btn bg_green') Inic
-          button(onclick='startPlayer(0)', class='btn bg_green') Start
-          button(onclick='pausePlayer(0)', class='btn bg_green') Pause
-          button(onclick='incMin(0)', class='btn bg_green') +1 perc
-          button(onclick='decMin(0)', class='btn bg_green') -1 perc
-          button(onclick='incHint(0)', class='btn bg_green') Segitseg +
-          button(onclick='decHint(0)', class='btn bg_green') Segitseg -
-          button(onclick='won(0)', class='btn bg_green') Nyert
-          button(onclick='setHun(0)', class='btn bg_green') Magyar
-          button(onclick='setEng(0)', class='btn bg_green') Angol
-    p(id='message')
-    p(id='version')= version
-      span= versionnr
+    //-h1= title
+    div(class="w3-row")
+      div(class="w3-col m6 text-red w3-center") 
+        p Mindhorror/Logibox 1
+        p(id='redmessage') -
+        p(id='redtime') -
+        p(id='redhint') -
+      div(class="w3-col m6 text-green w3-center")
+        p Cosmos/Logibox 2
+        p(id='greenmessage') -
+        p(id='greentime') -
+        p(id='greenhint') -
+    //-1st row
+    div(class="w3-row")
+      div(class="w3-col m4 w3-center")
+        button(onclick='inic(1)', class='btn bg_red') Inic
+        button(onclick='startPlayer(1)', class='btn bg_red') Start
+        button(onclick='pausePlayer(1)', class='btn bg_red') Szunet
+      div(class="w3-col m4 w3-center")
+        button(onclick='inicGame()', class='btn bg_yellow') Inic
+        button(onclick='startGame()', class='btn bg_yellow') Start
+        button(onclick='pauseGame(this)', class='btn bg_yellow') Szunet
+      div(class="w3-col m4 w3-center")
+        button(onclick='inic(0)', class='btn bg_green') Inic
+        button(onclick='startPlayer(0)', class='btn bg_green') Start
+        button(onclick='pausePlayer(0)', class='btn bg_green') Szunet
+    //-2nd row
+    div(class="w3-row")
+      div(class="w3-col m4 w3-center")
+        button(onclick='incMin(1)', class='btn bg_red') +1 perc
+        button(onclick='decMin(1)', class='btn bg_red') -1 perc
+      div(class="w3-col m4 w3-center")
+        button(onclick='incMinGame()', class='btn bg_yellow') +1 perc
+        button(onclick='decMinGame()', class='btn bg_yellow') -1 perc
+      div(class="w3-col m4 w3-center")
+        button(onclick='incMin(0)', class='btn bg_green') +1 perc
+        button(onclick='decMin(0)', class='btn bg_green') -1 perc
+    //-3rd row
+    div(class="w3-row")
+      div(class="w3-col m4 w3-center")
+        button(onclick='incHint(1)', class='btn bg_red') Segitseg +
+        button(onclick='decHint(1)', class='btn bg_red') Segitseg -
+      div(class="w3-col m4 w3-center")
+        button(onclick='getmyip()', class='btn bg_yellow') Get Server IP
+        p(id='message')
+      div(class="w3-col m4 w3-center")
+        button(onclick='incHint(0)', class='btn bg_green') Segitseg +
+        button(onclick='decHint(0)', class='btn bg_green') Segitseg -
+    //-4th row
+    div(class="w3-row")
+      div(class="w3-col m4 w3-center")
+        button(onclick='won(1)', class='btn bg_red') Nyert
+        button(onclick='switchLang(1)', class='btn bg_red') Hun/Eng
+      div(class="w3-col m4 w3-center")
+        p(id='version')= version
+          span= versionnr
+      div(class="w3-col m4 w3-center")
+        button(onclick='won(0)', class='btn bg_green') Nyert
+        button(onclick='switchLang(0)', class='btn bg_green') Hun/Eng
+   
     script startControl();
     
 
