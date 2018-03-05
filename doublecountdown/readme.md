@@ -1,4 +1,4 @@
-#Raspbian things
+# Raspbian things
 
 sudo sfdisk -l
 
@@ -10,7 +10,7 @@ sudo dd if=/home/iszalontai/Downloads/2017-11-29-raspbian-stretch.img of=/dev/sd
 ssh pi@192.168.0.37
 escaperoom
 
-#Monitor
+# Monitor
 
 https://www.waveshare.com/wiki/7inch_HDMI_LCD_(B)
 
@@ -40,16 +40,16 @@ Add the following lines to the [SeatDefaults] section:
 # don't sleep the screen
 xserver-command=X -s 0 dpms
 
-#NPM
+# NPM
 
-##kill a process
+## kill a process
 netstat -nlp|grep 3000
 
 tcp6       0      0 :::3000                 :::*                    LISTEN      12346/node
 
 kill 12346
 
-#HISTORY
+# HISTORY
 
 * 2018-03-05 Responsive design (RWD)
 * 2018-03-05 After winning will not stop the opponent team
