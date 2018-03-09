@@ -12,10 +12,12 @@ const PORT = 3000;
 const ONSTART = 0
 const PAUSED = 1
 const ONSTOP = 2
-const PLAYING = 4
-const WEWON = 5
-const WELOSE = 6
-const OUTOFTIME = 7
+const PLAYING = 3
+const NOTFINISHED = 4
+const WEWON = 6
+const WELOSE = 7
+const OUTOFTIME = 8
+
 const MAXHINTS = 3
 const MAXTOP = 12
 const ONEHOUR = 60 * 60 * 1000
@@ -27,19 +29,32 @@ texts.hu.versionnr = texts.en.versionnr = package.version
 function Player() {
     this.time = 0
     this.status = ONSTART
+    this.isPlaying = false
+    this.isWinner = NOTFINISHED
     this.hint = 0
     this.startedAt = 0
     this.pausedAt = 0
     this.targetTime = 0
+    this.lang = 'hu'
     this.text
     this.inicGame = function () {
-        if (this.status == WEWON || this.status == WELOSE || this.status == OUTOFTIME) {
+        if (this.isWinner != NOTFINISHED) {
             this.hint = 0
             this.status = ONSTART
+            this.isWinner = NOTFINISHED
         }
     }
     this.setText = function (text) {
         this.text = text
+    }
+    this.switchLang = function () {
+        if (this.lang == 'hu') {
+            this.lang = 'en'
+            this.text = texts.en
+        } else {
+            this.lang = 'hu'
+            this.text = texts.hu
+        }
     }
     this.startGame = function () {
         if (this.status == ONSTART) {
@@ -61,25 +76,27 @@ function Player() {
     }
     this.wonGame = function () {
         let d = new Date()
-        if (this.status == PLAYING) {
-            this.status = WEWON
+        if (this.status == PLAYING || this.status == PAUSED && this.isWinner != WEWON) {
+            this.isWinner = WEWON
+            this.status = PAUSED
             this.pausedAt = this.targetTime - d.getTime()
         }
     }
     this.loseGame = function () {
         let d = new Date()
-        if (this.status == PLAYING) {
-            this.status = WELOSE
-            this.pausedAt = this.targetTime - d.getTime()
+        if (this.status == PLAYING || this.status == PAUSED) {
+            this.isWinner = WELOSE
+            this.status = PLAYING
+            //this.pausedAt = this.targetTime - d.getTime()
         }
     }
     this.incHint = function () {
-        if (this.status == PLAYING) {
+        if (this.status == PLAYING || this.status == PAUSED) {
             this.hint++
         }
     }
     this.decHint = function () {
-        if (this.status == PLAYING) {
+        if (this.status == PLAYING || this.status == PAUSED) {
             this.hint--
             if (this.hint < 0) {
                 this.hint = 0
@@ -87,56 +104,50 @@ function Player() {
         }
     }
     this.addMin = function (n) {
-        this.targetTime += n * ONEMINUTE
+        if (this.status == PLAYING) {
+            this.targetTime += n * ONEMINUTE
+        } else if (this.status == PAUSED) {
+            this.pausedAt += n * ONEMINUTE
+        }
     }
     this.getData = function () {
         var d = new Date()
-        var isHalf = Math.floor(d.getTime() / 1000) % 2 == 0
-        this.message = ''
-        var timeR
+        var isEvenSecond = Math.floor(d.getTime() / 1000) % 2 == 0
+        let message = ''
+
         if (this.status == ONSTART) {
             this.time = 0
-            timeR = this.getReadable(this.time)
-            if (isHalf) {
-                this.message = this.text.startsoon
-            }
+            message = this.text.startsoon
         } else if (this.status == PLAYING) {
             this.time = this.targetTime - d.getTime()
-            if (this.time < 0) {
-                this.time = 0
-                this.status = OUTOFTIME
-            }
-            timeR = this.getReadable(this.time)
-            if (isHalf) {
-                timeR = timeR.replace(':', ' ').replace(':', ' ')
-            }
         } else if (this.status == PAUSED) {
             this.time = this.pausedAt
-            timeR = this.getReadable(this.time)
-            if (isHalf) {
-                this.message = this.text.paused
-            }
-        } else if (this.status == WEWON) {
-            this.time = this.pausedAt
-            timeR = this.getReadable(this.time)
-            if (isHalf) {
-                this.message = this.text.wewon
-            }
-        } else if (this.status == WELOSE) {
-            this.time = this.pausedAt
-            timeR = this.getReadable(this.time)
-            if (isHalf) {
-                this.message = this.text.welose
-            }
-        } else if (this.status == OUTOFTIME) {
-            this.time = 0
-            timeR = this.getReadable(this.time)
-            if (isHalf) {
-                this.message = this.text.outoftime
-            }
+            message = this.text.paused
         } else {
-            this.message = this.text.error
+            message = this.text.error
         }
+
+        if (this.isWinner == WEWON) {
+            //this.time = this.pausedAt
+            message = this.text.wewon
+        } else if (this.isWinner == WELOSE) {
+            //this.time = this.targetTime - d.getTime()
+            message = this.text.welose
+        } else if (this.isWinner == OUTOFTIME) {
+            //this.time = 0
+            message = this.text.outoftime
+        }
+        //blinking message
+        if (isEvenSecond) {
+            this.message = message
+        } else {
+            this.message = ''
+        }
+        if (this.time < 0) {
+            this.time = 0
+            this.isWinner = OUTOFTIME
+        }
+        timeR = this.getReadable(this.time)
         return {
             message: this.message,
             time: timeR,
@@ -314,6 +325,11 @@ app.get('/seteng/:player', (req, res) => {
     res.send('angol : ' + p)
 })
 
+app.get('/switchlang/:player', (req, res) => {
+    let p = req.params.player
+    players[p].switchLang()
+    res.send('lang switched : ' + p)
+})
 app.listen(PORT, () => console.log(package.name + ' server listening on port ' + PORT + '!'))
 
 

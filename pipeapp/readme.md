@@ -1,4 +1,4 @@
-#Raspbian things
+# Raspbian things
 sudo sfdisk -l
 
 /dev/sda
@@ -9,7 +9,7 @@ sudo dd if=/home/iszalontai/Downloads/2017-11-29-raspbian-stretch.img of=/dev/sd
 ssh pi@192.168.0.37
 escaperoom
 
-#Monitor
+# Monitor
 https://www.waveshare.com/wiki/7inch_HDMI_LCD_(B)
 
 sudo nano /boot/config.txt
@@ -42,6 +42,6 @@ xserver-command=X -s 0 dpms
 # TODO
 * nothing
 
-#GPIO
+# GPIO
 gpio readall
 works bad

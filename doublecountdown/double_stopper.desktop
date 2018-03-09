@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Double Stopper
+Comment=Launch DoubleStopper
+Exec=/home/iszalontai/Documents/escapetools/doublecountdown/start.sh
+Icon=/home/iszalontai/Documents/escapetools/doublecountdown/icon.png
+Terminal=true
+Name[en_US]=double_stopper

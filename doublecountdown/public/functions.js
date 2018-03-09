@@ -50,36 +50,36 @@ function getmyip() {
     }).then(function (json) {
         f('message').innerHTML = json.ip + ':' + json.port;
     }).catch(function (error) {
-        f('message').innerHTML = f('noconnection').innerHTML;
+        console.log(error);
     })
 
 }
 
 function incHint(n) {
     fetch('/inchint/' + n).then().catch(function (error) {
-        f('message').innerHTML = f('noconnection').innerHTML;
+        console.log(error);
     })
 }
 
 function decHint(n) {
     fetch('/dechint/' + n).then().catch(function (error) {
-        f('message').innerHTML = f('noconnection').innerHTML;
+        console.log(error);
     })
 }
 
 function startGame() {
     fetch('/startboth').then().catch(function (error) {
-        f('message').innerHTML = f('noconnection').innerHTML;
+        console.log(error);
     })
 }
 
 function startPlayer(n) {
     fetch('/start/' + n).then().catch(function (error) {
-        f('message').innerHTML = f('noconnection').innerHTML;
+        console.log(error);
     })
 }
 
-function pauseGame() {
+function pauseGame(n) {
     fetch('/pauseboth').then().catch(function (error) {
         console.log(error)
     })
@@ -153,6 +153,12 @@ function setEngGame() {
 
 function setEng(n) {
     fetch('/seteng/' + n).then().catch(function (error) {
+        console.log(error)
+    })
+}
+
+function switchLang(n) {
+    fetch('/switchlang/' + n).then().catch(function (error) {
         console.log(error)
     })
 }
