@@ -21,20 +21,21 @@ table{
 .ply_message{
     min-height: 10vh;
     font-size: 10vh;
-    padding-top: 2vh;
     text-align: center;
 }
 
 .digit{
-    font-size: 24vw;
+    font-size: 22vw;
     text-align: right;
     width: 15%;
+    height: 22vw;
 }
 
 .colon{
-    font-size: 24vw;
+    font-size: 22vw;
     text-align: center;
     width: 5%;
+    height: 22vw;
 }
 .hint{
     padding-top: 5vh;

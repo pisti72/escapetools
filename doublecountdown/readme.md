@@ -49,6 +49,22 @@ tcp6       0      0 :::3000                 :::*                    LISTEN      
 
 kill 12346
 
+# Kiosk
+https://pi-store.com/pages/raspbian-jessie-kiosk-mode
+
+nano /home/pi/.config/lxsession/LXDE-pi/autostart
+
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+@xset s off
+@xset s noblank
+@xset -dpms
+@/home/pi/Documents/escapetools/doublecountdown/start2.sh
+@sleep 10
+@chromium-browser --incognito --kiosk http://localhost:3000/player/green
+
 # HISTORY
 
 * 2018-03-05 Responsive design (RWD)

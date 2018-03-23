@@ -188,7 +188,7 @@ app.get('/', (req, res) => {
     res.render('index', texts.hu)
 })
 
-app.get('/player', (req, res) => {
+app.get('/player/*', (req, res) => {
     res.render('player')
 })
 

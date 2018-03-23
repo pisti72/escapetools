@@ -40,8 +40,14 @@ function loopControl() {
     window.requestAnimationFrame(loopControl);
 }
 
-function startClient(n) {
-    client = n;
+function startClient() {
+    var path = window.location.pathname;
+    if(path.indexOf('green') != -1) {
+        client = 0;
+    }else{
+        client = 1;
+    }
+
     if (client == 0) {
         document.body.style.color = 'rgb(0, 255, 0)';
         document.body.style.textShadow = '0px 0px 20px rgba(0, 255, 0, .7)';
@@ -49,8 +55,8 @@ function startClient(n) {
         document.body.style.color = 'rgb(255, 0, 0)';
         document.body.style.textShadow = '0px 0px 20px rgba(255, 0, 0, .7)';
     }
-    f('inic').style.display = 'none';
-    toggleFullscreen();
+    //f('inic').style.display = 'none';
+    //toggleFullscreen();
     loopClient();
 }
 
