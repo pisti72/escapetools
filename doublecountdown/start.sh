@@ -1,5 +1,5 @@
 #!/bin/sh
-cd /home/iszalontai/Documents/escapetools/doublecountdown/
+cd /home/pi/Documents/escapetools/doublecountdown/
 firefox --new-window start.html
 npm start
 
