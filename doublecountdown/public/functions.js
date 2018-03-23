@@ -10,24 +10,34 @@ const FREQ = 50;
 var thread;
 var fullscreen = false;
 var client = 0;
+var counter = 0;
 
 function startControl() {
-    thread = setInterval('loopControl()', 101);
+    loopControl();
 }
 
 function loopControl() {
-    fetch('/getplayers').then(function (response) {
-        return response.json()
-    }).then(function (json) {
-        f('greenmessage').innerHTML = json.green.message;
-        f('redmessage').innerHTML = json.red.message;
-        f('greentime').innerHTML = json.green.time;
-        f('redtime').innerHTML = json.red.time;
-        f('greenhint').innerHTML = json.green.hinttext + json.green.hints;
-        f('redhint').innerHTML = json.red.hinttext + json.red.hints;
-    }).catch(function (error) {
-        f('message').innerHTML = 'Nincs kapcsolat';
-    })
+    if (counter % 20 == 0) {
+        fetch('/getplayers').then(function (response) {
+            return response.json()
+        }).then(function (json) {
+            f('greenmessage').innerHTML = json.green.message;
+            f('redmessage').innerHTML = json.red.message;
+            f('greentime').innerHTML = json.green.time;
+            f('redtime').innerHTML = json.red.time;
+            f('greenhint').innerHTML = json.green.hinttext + json.green.hints;
+            f('redhint').innerHTML = json.red.hinttext + json.red.hints;
+            if (json.separate) {
+                f('link').innerHTML = '<img height="30px" src="unlink.svg">';
+            } else {
+                f('link').innerHTML = '<img height="30px" src="link.svg">';
+            }
+        }).catch(function (error) {
+            f('message').innerHTML = 'Nincs kapcsolat';
+        })
+    }
+    counter++;
+    window.requestAnimationFrame(loopControl);
 }
 
 function startClient(n) {
@@ -41,7 +51,7 @@ function startClient(n) {
     }
     f('inic').style.display = 'none';
     toggleFullscreen();
-    thread = setInterval('loopClient()', FREQ);
+    loopClient();
 }
 
 function getmyip() {
@@ -164,47 +174,51 @@ function switchLang(n) {
 }
 
 function loopClient() {
-    fetch('/getplayers').then(function (response) {
-        return response.json()
-    }).then(function (json) {
-        var time;
-        if (client == 0) {
-            time = json.green.time;
-            f('message').innerHTML = json.green.message;
-            f('hinttext').innerHTML = json.green.hinttext;
-            f('hints').innerHTML = json.green.hints;
-            if (!json.separate) {
-                f('opphinttext').innerHTML = json.green.opphinttext;
-                f('opphints').innerHTML = json.red.hints;
+    if (counter % 11 == 0) {
+        fetch('/getplayers').then(function (response) {
+            return response.json()
+        }).then(function (json) {
+            var time;
+            if (client == 0) {
+                time = json.green.time;
+                f('message').innerHTML = json.green.message;
+                f('hinttext').innerHTML = json.green.hinttext;
+                f('hints').innerHTML = json.green.hints;
+                if (!json.separate) {
+                    f('opphinttext').innerHTML = json.green.opphinttext;
+                    f('opphints').innerHTML = json.red.hints;
+                } else {
+                    f('opphinttext').innerHTML = '';
+                    f('opphints').innerHTML = '';
+                }
             } else {
-                f('opphinttext').innerHTML = '';
-                f('opphints').innerHTML = '';
+                time = json.red.time;
+                f('message').innerHTML = json.red.message;
+                f('hinttext').innerHTML = json.red.hinttext;
+                f('hints').innerHTML = json.red.hints;
+                if (!json.separate) {
+                    f('opphinttext').innerHTML = json.red.opphinttext;
+                    f('opphints').innerHTML = json.green.hints;
+                } else {
+                    f('opphinttext').innerHTML = '';
+                    f('opphints').innerHTML = '';
+                }
             }
-        } else {
-            time = json.red.time;
-            f('message').innerHTML = json.red.message;
-            f('hinttext').innerHTML = json.red.hinttext;
-            f('hints').innerHTML = json.red.hints;
-            if (!json.separate) {
-                f('opphinttext').innerHTML = json.red.opphinttext;
-                f('opphints').innerHTML = json.green.hints;
-            } else {
-                f('opphinttext').innerHTML = '';
-                f('opphints').innerHTML = '';
-            }
-        }
 
-        f('d5').innerHTML = time.substr(0, 1);
-        f('d4').innerHTML = time.substr(1, 1);
-        f('c1').innerHTML = time.substr(2, 1);
-        f('d3').innerHTML = time.substr(3, 1);
-        f('d2').innerHTML = time.substr(4, 1);
-        f('c0').innerHTML = time.substr(5, 1);
-        f('d1').innerHTML = time.substr(6, 1);
-        f('d0').innerHTML = time.substr(7, 1);
-    }).catch(function (error) {
-        f('message').innerHTML = 'Connection lost';
-    })
+            f('d5').innerHTML = time.substr(0, 1);
+            f('d4').innerHTML = time.substr(1, 1);
+            f('c1').innerHTML = time.substr(2, 1);
+            f('d3').innerHTML = time.substr(3, 1);
+            f('d2').innerHTML = time.substr(4, 1);
+            f('c0').innerHTML = time.substr(5, 1);
+            f('d1').innerHTML = time.substr(6, 1);
+            f('d0').innerHTML = time.substr(7, 1);
+        }).catch(function (error) {
+            f('message').innerHTML = 'Connection lost';
+        })
+    }
+    counter++;
+    window.requestAnimationFrame(loopClient);
 }
 
 function toggleFullscreen() {
