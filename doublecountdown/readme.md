@@ -64,7 +64,7 @@ nano /home/pi/.config/lxsession/LXDE-pi/autostart
 @unclutter -idle 0 #Hide mouse cursor
 @/home/pi/Documents/escapetools/doublecountdown/start2.sh
 @sleep 10
-@chromium-browser --noerrdialogs --incognito --kiosk http://localhost:3000/play$
+@chromium-browser --noerrdialogs --incognito --kiosk http://localhost:3000/player/green
 
 
 # HISTORY
