@@ -193,7 +193,7 @@ app.get('/getip', function (req, res) {
 function setRingStatus(status) {
     if (ringStatus == ONSTART && status == INAIR) {
         gameStarted()
-    } else if (ringStatus == INAIR && gameStatus == INGAME && status == ONPIPE) {
+    } else if (ringStatus == INAIR && gameStatus == INGAME && status == ONPIPE && isActive) {
         lives--
         if (lives <= 0) {
             gameStatus = GAMEOVER
@@ -216,6 +216,10 @@ function setRingStatus(status) {
     }
     ringStatus = status
     console.log('Ring status changed to --> ' + ringStatus)
+}
+
+function isActive() {
+    return true;
 }
 
 app.get('/gethighscore/:from/:to', function (req, res) {

@@ -21,7 +21,7 @@ hdmi_mode=87
 hdmi_cvt 800 480 60 6 0 0 0
 hdmi_drive=1
 
-or
+ -- or --
 
 dmi_force_hotplug=1
 hdmi_group=2
@@ -38,10 +38,34 @@ Add the following lines to the [SeatDefaults] section:
 # don't sleep the screen
 xserver-command=X -s 0 dpms
 
+# Kiosk
+https://pi-store.com/pages/raspbian-jessie-kiosk-mode
+
+nano /home/pi/.config/lxsession/LXDE-pi/autostart
+
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+@xset s off
+@xset s noblank
+@xset -dpms
+@unclutter -idle 0 #Hide mouse cursor
+@/home/pi/Documents/escapetools/pipeapp/start.sh
+@sleep 10
+@chromium-browser --noerrdialogs --incognito --kiosk http://localhost:3000/play$
+
+## kiosk android
+
+https://android.stackexchange.com/questions/88031/how-to-set-kiosk-mode-in-chrome
 
 # TODO
 * nothing
 
 # GPIO
 gpio readall
-works bad
+-- or --
+pinout
+
+
+https://www.w3schools.com/nodejs/nodejs_raspberrypi_gpio_intro.asp
