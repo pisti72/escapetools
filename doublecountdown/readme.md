@@ -66,6 +66,10 @@ nano /home/pi/.config/lxsession/LXDE-pi/autostart
 @sleep 10
 @chromium-browser --noerrdialogs --incognito --kiosk http://localhost:3000/player/green
 
+-- or --
+
+@chromium-browser --noerrdialogs --incognito --kiosk http://192.0.0.205:3000/player/red
+
 
 # HISTORY
 
