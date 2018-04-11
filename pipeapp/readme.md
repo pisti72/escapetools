@@ -9,6 +9,15 @@ sudo dd if=/home/iszalontai/Downloads/2017-11-29-raspbian-stretch.img of=/dev/sd
 ssh pi@192.168.0.37
 escaperoom
 
+
+
+sudo shutdown -h now
+sudo reboot
+
+# Install nodejs
+https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
+
+
 # Monitor
 https://www.waveshare.com/wiki/7inch_HDMI_LCD_(B)
 

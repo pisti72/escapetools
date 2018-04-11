@@ -77,8 +77,6 @@ gpio4.on("change", function (val) {
     } else {
         setRingStatus(ONSTART)
     }
-
-
 });
 
 gpio5.on("change", function (val) {
@@ -89,7 +87,6 @@ gpio5.on("change", function (val) {
     } else {
         setRingStatus(ONPIPE)
     }
-
     console.log(val)
 });
 
@@ -101,7 +98,6 @@ gpio6.on("change", function (val) {
     } else {
         setRingStatus(ONSTOP)
     }
-
     console.log(val)
 });
 

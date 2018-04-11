@@ -11,7 +11,7 @@ const DEL = 'DEL';
 const ERROR = 'No connection!';
 const MAXLENGTH = 16;
 
-var fullscreen = false;
+var fullscreen = true;
 var counter = 0;
 var name = EMPTY;
 var time = EMPTY;
