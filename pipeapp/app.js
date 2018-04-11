@@ -39,6 +39,7 @@ var db = []
 
 var startedAt
 var stoppedAt
+var activeAt
 var lives = MAXLIVES
 var ringStatus = ONSTART
 var gameStatus = ONSTART
@@ -194,15 +195,7 @@ function setRingStatus(status) {
     if (ringStatus == ONSTART && status == INAIR) {
         gameStarted()
     } else if (ringStatus == INAIR && gameStatus == INGAME && status == ONPIPE && isActive) {
-        lives--
-        if (lives <= 0) {
-            gameStatus = GAMEOVER
-            var d = new Date()
-            stoppedAt = d.getTime()
-            sound = 'gameover'
-        } else {
-            sound = 'failed'
-        }
+        pipeTouched()
     } else if (ringStatus == INAIR && status == ONSTART) {
         lives = MAXLIVES
         gameStatus = ONSTART
@@ -218,8 +211,22 @@ function setRingStatus(status) {
     console.log('Ring status changed to --> ' + ringStatus)
 }
 
+function pipeTouched() {
+    lives--
+    if (lives <= 0) {
+        gameStatus = GAMEOVER
+        var d = new Date()
+        stoppedAt = d.getTime()
+        sound = 'gameover'
+    } else {
+        sound = 'failed'
+        var activeAt = new Date() + 5 * 1000; //5sec
+    }
+}
+
 function isActive() {
-    return true;
+    var d = new Date()
+    return d > activeAt;
 }
 
 app.get('/gethighscore/:from/:to', function (req, res) {
@@ -265,9 +272,7 @@ function inicDb() {
         } else {
             db = JSON.parse(data)
         }
-
     })
-
 }
 
 function insertRow(time, name) {
@@ -306,6 +311,7 @@ function gameStarted() {
     ringStatus = INAIR
     lives = MAXLIVES
     startedAt = d.getTime()
+    activeAt = startedAt
     sound = 'started'
 }
 
