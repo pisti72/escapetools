@@ -72,7 +72,7 @@ inicDb()
 gpio4.on("change", function (val) {
     // value will report either 1 or 0 (number) when the value changes
     console.log('GPIO 4 (START) : ' + val)
-    if (val == 1) {
+    if (val == 0) {
         setRingStatus(INAIR)
     } else {
         setRingStatus(ONSTART)
@@ -82,7 +82,7 @@ gpio4.on("change", function (val) {
 gpio5.on("change", function (val) {
     // value will report either 1 or 0 (number) when the value changes
     console.log('GPIO 5 (PIPE) : ' + val)
-    if (val == 1) {
+    if (val == 0) {
         setRingStatus(INAIR)
     } else {
         setRingStatus(ONPIPE)
@@ -93,7 +93,7 @@ gpio5.on("change", function (val) {
 gpio6.on("change", function (val) {
     // value will report either 1 or 0 (number) when the value changes
     console.log('GPIO 6 (FINISH) : ' + val)
-    if (val == 1) {
+    if (val == 0) {
         setRingStatus(INAIR)
     } else {
         setRingStatus(ONSTOP)
@@ -190,7 +190,7 @@ app.get('/getip', function (req, res) {
 function setRingStatus(status) {
     if (ringStatus == ONSTART && status == INAIR) {
         gameStarted()
-    } else if (ringStatus == INAIR && gameStatus == INGAME && status == ONPIPE && isActive) {
+    } else if (ringStatus == INAIR && gameStatus == INGAME && status == ONPIPE && isActive()) {
         pipeTouched()
     } else if (ringStatus == INAIR && status == ONSTART) {
         lives = MAXLIVES
@@ -216,13 +216,13 @@ function pipeTouched() {
         sound = 'gameover'
     } else {
         sound = 'failed'
-        var activeAt = new Date() + 5 * 1000; //5sec
+        activeAt = new Date().getTime() + 2000; //2sec
     }
 }
 
 function isActive() {
-    var d = new Date()
-    return d > activeAt;
+    var d = new Date().getTime()
+    return d > activeAt
 }
 
 app.get('/gethighscore/:from/:to', function (req, res) {
