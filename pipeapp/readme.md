@@ -61,8 +61,8 @@ nano /home/pi/.config/lxsession/LXDE-pi/autostart
 @xset -dpms
 @unclutter -idle 0 #Hide mouse cursor
 @/home/pi/Documents/escapetools/pipeapp/start.sh
-@sleep 10
-@chromium-browser --noerrdialogs --incognito --kiosk http://localhost:3000/play$
+@sleep 3
+@chromium-browser --noerrdialogs --incognito --kiosk http://localhost:3000/game
 
 ## kiosk android
 

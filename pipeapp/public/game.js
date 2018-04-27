@@ -16,6 +16,9 @@ var counter = 0;
 var name = EMPTY;
 var time = EMPTY;
 var ms = 0;
+var lives = 0;
+var lastClick = 0;
+var sequence = '';
 
 //audio components
 var sndStart;
@@ -44,12 +47,15 @@ function initGame() {
     f('inputname').style.display = 'none';
     renderKeyboard();
     fetchHighscore();
-    document.body.addEventListener("touchstart", function (e) {
-        e.preventDefault();
-    })
+    // document.body.addEventListener("touchstart", function (e) {
+    //     e.preventDefault();
+    // })
     document.body.addEventListener('keydown', function (e) {
-        if (e.keyCode == 13) {
+        if (e.keyCode == 13) {//Enter
             toggleFullScreen();
+        }
+        if (e.keyCode == 75) {//K-key
+            titleClicked();
         }
     });
     setInterval(fetchingGamedata, 71);
@@ -112,7 +118,7 @@ function btnPressed(i) {
 }
 
 function endPressed() {
-    fetch('/ms/' + ms + '/name/' + name).then(function (response) {
+    fetch('/ms/' + ms + '/name/' + name + '/lives/' + lives).then(function (response) {
         return response.json();
         throw new TypeError("Oops, we haven't got JSON!");
     })
@@ -125,13 +131,13 @@ function fetchingGamedata() {
         throw new TypeError("Oops, we haven't got JSON!");
     })
         .then(function (json) {
-            if(json.sound == 'started'){
+            if (json.sound == 'started') {
                 sndStart.play()
-            }else if(json.sound == 'failed'){
+            } else if (json.sound == 'failed') {
                 sndFail.play()
-            }else if(json.sound == 'gameover'){
+            } else if (json.sound == 'gameover') {
                 sndGameover.play()
-            }else if(json.sound == 'success'){
+            } else if (json.sound == 'success') {
                 sndSuccess.play()
             }
             if (json.status == ONSTART) {
@@ -215,6 +221,7 @@ function fetchingGamedata() {
                 f('inputname').style.display = 'block';
                 f('topscore').style.display = 'none';
                 ms = json.ms;
+                lives = json.lives;
                 time = json.time;
                 f('time').innerHTML = time;
             }
@@ -226,6 +233,46 @@ function fetchingGamedata() {
             f('inputname').innerHTML = ERROR;
         });
 }
+
+function titleClicked() {
+    var t = new Date().getTime();
+    var d = getTiTaOrNone(t - lastClick);
+    lastClick = t;
+    if (d == 'None') {
+        sequence = '';
+    } else {
+        sequence += d;
+        if (sequence == 'TiTiTaTa') {
+            f('settings').style.display = 'block';
+            getIp();
+        }
+    }
+}
+
+function deleteTodayHi() {
+    fetch('/deletehi').then(function (response) {
+        return response.json();
+        throw new TypeError("Oops, we haven't got JSON!");
+    }).catch(function (error) { console.log(error); });
+}
+
+function setLivesTo(n) {
+
+}
+
+function closeSettings() {
+    f('settings').style.display = 'none';
+}
+
+function getTiTaOrNone(n) {
+    if (n < 600) {
+        return 'Ti';
+    } else if (n < 1100) {
+        return 'Ta';
+    }
+    return 'None';
+}
+
 function fetchingHighscore() {
     fetch('/gethighscore/0/13').then(function (response) {
         return response.json();
@@ -248,6 +295,7 @@ function fetchingHighscore() {
             f('list').innerHTML = ERROR;
         });
 }
+
 function fetchHighscore() {
     fetch('/gethighscore/0/12').then(function (response) {
         return response.json();
@@ -260,8 +308,13 @@ function fetchHighscore() {
                 s += '<tr>';
                 s += '<td width="10%" class="cell">' + json[i].id + '.</td>';
                 s += '<td width="20%" class="cell">' + json[i].timeHuman + '</td>';
-                s += '<td width="50%" class="cell">' + json[i].name + '</td>';
-                s += '<td width="20%" class="cell">' + json[i].timestamp + '</td>';
+                s += '<td width="40%" class="cell">' + json[i].name + '</td>';
+                //s += '<td width="20%" class="cell">' + json[i].timestamp + '</td>';
+                s += '<td width="30%" class="cell">';
+                for (let j = 0; j < json[i].lives; j++) {
+                    s += '<img src="assets/heart_dot_red.svg" height="30px"/>';
+                }
+                s += '</td>';
                 s += '</tr>';
             }
             s += '</table>';
@@ -273,7 +326,12 @@ function fetchHighscore() {
                 s += '<td width="10%" class="cell">' + json[i].id + '.</td>';
                 s += '<td width="20%" class="cell">' + json[i].timeHuman + '</td>';
                 s += '<td width="50%" class="cell">' + json[i].name + '</td>';
-                s += '<td width="20%" class="cell">' + json[i].timestamp + '</td>';
+                //s += '<td width="20%" class="cell">' + json[i].timestamp + '</td>';
+                s += '<td width="30%" class="cell">';
+                for (let j = 0; j < json[i].lives; j++) {
+                    s += '<img src="assets/heart_dot_red.svg" height="30px"/>';
+                }
+                s += '</td>';
                 s += '</tr>';
             }
             s += '</table>';
@@ -283,6 +341,7 @@ function fetchHighscore() {
             f('list').innerHTML = ERROR;
         });
 }
+
 function toggleFullScreen() {
     if (
         document.fullscreenEnabled ||
@@ -327,13 +386,13 @@ function setStatus(s) {
         })
         .catch(function (error) { console.log(error); });
 }
-function getIp(s) {
+function getIp() {
     fetch('/getip').then(function (response) {
         return response.json();
         throw new TypeError("Oops, we haven't got JSON!");
     })
         .then(function (json) {
-            f('message').innerHTML = 'http://' + json.ip + ':' + json.port;
+            f('myip').innerHTML = 'http://' + json.ip + ':' + json.port;
         })
         .catch(function (error) { console.log(error); });
 }

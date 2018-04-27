@@ -101,6 +101,16 @@ a:active {
     width: 8%;
 }
 
+#settings{
+    position:fixed;
+    top:0;
+    left:0;
+    display:none;
+    background-color:darkblue;
+    margin: 16px;
+    padding: 16px;
+}
+
 #gameinfo{
     text-align: center;
     font-size: 10vh;

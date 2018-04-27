@@ -4,13 +4,10 @@
  * @description Business logic and frondend pipe game for escape room
  * @created 2018/01/31
  * @finshed 2018/03/01
+ * @modified 2018/04/27 Fri
  * 
  * TODO
- * - paginable high score
- * - highscore visible on 7 inch monitor too
- * - results which are older then 3 montch should not be shown
- * - settings: ideas needed
- * - sound to fail, success, gameover
+ * - nope
  * 
  * 
  * 
@@ -127,8 +124,8 @@ app.get('/yourname', function (req, res) {
     res.sendFile(path.join(__dirname + '/pages/yourname.html'))
 })
 
-app.get('/ms/:ms/name/:name', function (req, res) {
-    insertRow(req.params.ms, req.params.name)
+app.get('/ms/:ms/name/:name/lives/:lives', function (req, res) {
+    insertRow(req.params.ms, req.params.name, req.params.lives)
     gameStatus = ONSTART
     lives = MAXLIVES
     res.send('Inserted')
@@ -216,7 +213,7 @@ function pipeTouched() {
         sound = 'gameover'
     } else {
         sound = 'failed'
-        activeAt = new Date().getTime() + 2000; //2sec
+        activeAt = new Date().getTime() + 500; //half sec
     }
 }
 
@@ -231,6 +228,23 @@ app.get('/gethighscore/:from/:to', function (req, res) {
     let top = db.slice(from, to)
     res.send(JSON.stringify(top))
 })
+
+app.get('/deletehi', function (req, res) {
+    let timestamp = new Date(1985 + 1, 12 - 1, 31, 0, 0, 0, 0);
+    for (let i = 0; i < db.length; i++) {
+        db[i] = {
+            id: i + 1,
+            timeHuman: getReadable(0),
+            time: 1e9,
+            name: 'MYSTIQUE',
+            timestamp: getHHHHMMDDfromTimestamp(timestamp),
+            lives: 3
+        }
+
+    }
+    res.send('deleted')
+})
+
 
 app.listen(PORT, () => console.log(package.name + ' server listening on port ' + PORT + '!'))
 
@@ -259,7 +273,8 @@ function inicDb() {
                         timeHuman: getReadable(0),
                         time: 1e9,
                         name: 'MYSTIQUE',
-                        timestamp: getHHHHMMDDfromTimestamp(timestamp)
+                        timestamp: getHHHHMMDDfromTimestamp(timestamp),
+                        lives: 3
                     }
                 )
             }
@@ -271,7 +286,7 @@ function inicDb() {
     })
 }
 
-function insertRow(time, name) {
+function insertRow(time, name, lives) {
     var d = new Date()
     var timestamp = d.getTime()
     db.push(
@@ -280,7 +295,8 @@ function insertRow(time, name) {
             timeHuman: getReadable(time * 1),
             time: time * 1,
             name: name,
-            timestamp: getHHHHMMDDfromTimestamp(timestamp)
+            timestamp: getHHHHMMDDfromTimestamp(timestamp),
+            lives: lives
         }
     )
     //order by time asc
