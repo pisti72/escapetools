@@ -246,13 +246,14 @@ function titleClicked() {
             f('settings').style.display = 'block';
             getIp();
         }
+	console.log(sequence);
     }
 }
 
 function deleteTodayHi() {
     fetch('/deletehi').then(function (response) {
-        return response.json();
-        throw new TypeError("Oops, we haven't got JSON!");
+        //return response.json();
+        //throw new TypeError("Oops, we haven't got JSON!");
     }).catch(function (error) { console.log(error); });
 }
 
