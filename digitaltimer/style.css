@@ -1,0 +1,27 @@
+@font-face {
+    font-family: digital;
+    src: url(assets/digital_dismay/Digital\ Dismay.otf);
+}
+
+@font-face {
+    font-family: digital2;
+    src: url(assets/digit/Digit.TTF);
+}
+
+body {
+    background-color: black;
+    color: white;
+    font-family: digital2;
+    font-size: 20 px;
+}
+
+#container {
+    margin-top: 10%;
+    text-align: center;
+}
+
+#time {
+    color: red;
+    font-size: 18vw;
+    text-shadow: 0px 0px 20px red;
+}
