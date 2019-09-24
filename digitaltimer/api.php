@@ -69,6 +69,18 @@ if (isset($_GET['command'],$_GET['token'])) {
     }
 }
 
+if (isset($_GET['color'],$_GET['token'])) {
+    $token = $_GET['token'];
+    $color = $_GET['color'];
+    $query = "UPDATE remotetimer_timers SET color = '$color' WHERE token ='$token'";
+    $success = $mysqli->query($query);
+    if ($success) {
+        $response['result'] = 'success';
+    } else {
+        $response['result'] = 'failed';
+    }
+}
+
 /* send back the result */
 echo json_encode($response);
 

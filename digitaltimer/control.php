@@ -13,9 +13,13 @@
     <p id="timestring"></p>
     <button>Pause</button>
     <button>Play</button>
-    <button>Stop</button>
+    <button onclick="setToZero()">Set to zero</button>
     <button onclick="setOneHour()">Start 1 hour</button>
     <button onclick="addFiveMins()">Add 5 mins</button>
+    <button onclick="setToRed()">Set to red</button>
+    <button onclick="setToGreen()">Set to green</button>
+    <button onclick="setToBlue()">Set to blue</button>
+    <button onclick="setToWhite()">Set to white</button>
     <script>
     var id = '<?php echo ($_GET['id']); ?>';
     </script>

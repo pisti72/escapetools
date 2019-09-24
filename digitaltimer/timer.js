@@ -9,7 +9,7 @@ var date = {};
 update();
 
 function checkServer() {
-    if (counter % 100 == 0) {
+    if (counter % 30 == 0) {
         
         fetch(api + '?timer=' + id).then(function (response) {
             return response.json()
@@ -18,6 +18,16 @@ function checkServer() {
                 setOneHour();
             } else if (json.command == 'ADDFIVEMINS') {
                 addFiveMins();
+            } else if (json.command == 'SETTOZERO') {
+                setToZero();
+            } else if (json.command == 'RED'){
+                setToRed();
+            } else if (json.command == 'GREEN'){
+                setToGreen();
+            } else if (json.command == 'WHITE'){
+                setToWhite();
+            } else if (json.command == 'BLUE'){
+                setToBlue();
             }
             //send back the timeString
             fetch(api + '?timestring=' + timeString + '&token=' + id).then().catch(function (error) {
@@ -33,6 +43,25 @@ function setOneMinutes() {
 }
 function setOneHour() {
     setEndTime(60 * 60);
+}
+function setToZero() {
+    setEndTime(0);
+}
+function setToRed() {
+    f('time').style.color = '#f00';
+    f('time').style.textShadow='0px 0px 20px #f00';
+}
+function setToGreen() {
+    f('time').style.color = '#0f0';
+    f('time').style.textShadow='0px 0px 20px #0f0';
+}
+function setToBlue() {
+    f('time').style.color = 'blue';
+    f('time').style.textShadow='0px 0px 20px blue';
+}
+function setToWhite() {
+    f('time').style.color = 'white';
+    f('time').style.textShadow='0px 0px 20px white';
 }
 function addFiveMins() {
     addMinutesToEndTime(5);
