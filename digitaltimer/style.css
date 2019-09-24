@@ -11,17 +11,20 @@
 body {
     background-color: black;
     color: white;
-    font-family: digital2;
-    font-size: 20 px;
+}
+
+button {
+    cursor: pointer;
 }
 
 #container {
-    margin-top: 10%;
+    margin-top: 20%;
     text-align: center;
 }
 
 #time {
     color: red;
+    font-family: digital2;
     font-size: 18vw;
     text-shadow: 0px 0px 20px red;
 }

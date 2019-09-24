@@ -1,42 +1,30 @@
 const STATE_HALT = 0;
+const api = '/api.php';
 var state = STATE_HALT;
 var endTime = 0;
 var counter = 0;
+var timeString = '';
 var date = {};
-setEndTime(60*60+1);
+//setEndTime(60 * 60 + 1);
 update();
-function pauseGame(n) {
-    fetch('/pauseboth').then().catch(function (error) {
-        console.log(error)
-    })
-}
-function getmyip() {
-    fetch('/getmyip').then(function (response) {
-        return response.json()
-    }).then(function (json) {
-        f('message').innerHTML = json.ip + ':' + json.port;
-    }).catch(function (error) {
-        console.log(error);
-    })
-}
-function checkServer(){
-    if (counter % 20 == 0) {
-        fetch('/getplayers').then(function (response) {
+
+function checkServer() {
+    if (counter % 100 == 0) {
+        
+        fetch(api + '?timer=' + id).then(function (response) {
             return response.json()
         }).then(function (json) {
-            f('greenmessage').innerHTML = json.green.message;
-            f('redmessage').innerHTML = json.red.message;
-            f('greentime').innerHTML = json.green.time;
-            f('redtime').innerHTML = json.red.time;
-            f('greenhint').innerHTML = json.green.hinttext + json.green.hints;
-            f('redhint').innerHTML = json.red.hinttext + json.red.hints;
-            if (json.separate) {
-                f('link').innerHTML = '<img height="30px" src="unlink.svg">';
-            } else {
-                f('link').innerHTML = '<img height="30px" src="link.svg">';
+            if (json.command == 'SETONEHOUR') {
+                setOneHour();
+            } else if (json.command == 'ADDFIVEMINS') {
+                addFiveMins();
             }
+            //send back the timeString
+            fetch(api + '?timestring=' + timeString + '&token=' + id).then().catch(function (error) {
+                console.log(error)
+            })
         }).catch(function (error) {
-            f('message').innerHTML = 'Nincs kapcsolat';
+            console.log(error);
         })
     }
 }
@@ -46,14 +34,17 @@ function setOneMinutes() {
 function setOneHour() {
     setEndTime(60 * 60);
 }
+function addFiveMins() {
+    addMinutesToEndTime(5);
+}
 function setEndTime(n) {
     date = new Date();
     endTime = date.getTime() + 1000 * n;
 }
-function addSecondsToEndTime(n){
+function addSecondsToEndTime(n) {
     endTime += 1000 * n;
 }
-function addMinutesToEndTime(n){
+function addMinutesToEndTime(n) {
     endTime += 60000 * n;
 }
 function getMinutesTen(t) {
@@ -71,10 +62,10 @@ function getSecondsTen(t) {
 function getSeconds(t) {
     return Math.floor(t / 1000) % 100 + '';
 }
-function getMillisecondsTen(t){
+function getMillisecondsTen(t) {
     return Math.floor(t / 100) % 10 + '';
 }
-function getMillisecondsOne(t){
+function getMillisecondsOne(t) {
     return Math.floor(t / 10) % 10 + '';
 }
 function update() {
@@ -84,16 +75,21 @@ function update() {
     if (time < 0) {
         time = 0;
     }
-    f('time').innerHTML = 
-    getMinutesTen(time) +
-    getMinutesOne(time) +
-    ' : ' +
-    getSecondsTen(time) +
-    getSecondsOne(time) + 
-    ' : ' + 
-    getMillisecondsTen(time) +
-    getMillisecondsOne(time);
+    checkServer();
+    timeString = getSixDigits(time);
+    f('time').innerHTML = timeString;
+   
     requestAnimationFrame(update);
+}
+function getSixDigits(time) {
+    return getMinutesTen(time) +
+        getMinutesOne(time) +
+        ':' +
+        getSecondsTen(time) +
+        getSecondsOne(time) +
+        ':' +
+        getMillisecondsTen(time) +
+        getMillisecondsOne(time);
 }
 function f(n) {
     return document.getElementById(n);
