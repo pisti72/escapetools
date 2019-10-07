@@ -1,0 +1,19 @@
+A szobában lévő egység:
+
+Háttérkép
+Hangadás
+Érintőképernyő
+Idővisszaszámláló
+HINT gomb
+Hány segítséget használt fel, pl: a kalóznál van 5 halálfej, és ha rákattint a HINT gombra, egy eltűnik
+HINT gomb megnyomásakor megjelenik hogy pls wait….
+Videó lejátszása az elején (az óra inditása után ez a play gomb is eltűnik, majd elindul az óra)
+
+A játévezető egysége
+
+Nem kell hogy igazi “gép” legyen, elég ha csak egy IP-n futó program, mint wollongongnál
+Az időt tudjuk elindiítani, plusz öt perc, minusz 5 perc
+Két mező legyen, az egyikbe képet tudjon belehúzni, ami megjelenik bent, a másikba szöveget tudjon írni, ami cirkalmasan megjelenik bent
+Pályánként kellene megnyithatónak lennie, tehát ha a Játékvezető vezeti egyszerre pl a Katedrális és Shogunt, akkor minkét kezelőfelület lehessen megnyitható.
+Mikrofonos beleszólás? Ha sok szívás, akkor nem...Tehát egy gombra kattintva tudjon a Játékvezető beszólni is a kioskon keresztül...
+
