@@ -4,27 +4,38 @@
 <head>
     <title>Selfiebox</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 
 <body>
-    <!-- <div id="welcome"> -->
-        <!-- <h1 id="title_txt"></h1> -->
-        <!-- <h2 id="touch_txt"></h2> -->
-    <!-- </div> -->
-    <div id="shot">
-        <video id="video" width="640" height="400"></video>
-        <button onclick="shot()">Shot</button>
-        <button onclick="save()">Save</button>
-        <canvas id="canvas"></canvas>
-    </div>
-    <div id="send">
-        <h1>Send to your email</h1>
-        <input type="email" id="email" placeholder="my email">
-        <button onclick="send()">Send</button>
-        <p id="message"></p>
+    <div id="container">
+        <div id="welcome">
+            <h1 id="title_txt"></h1>
+            <h2 id="touch_txt"></h2>
+        </div>
+        <div id="shot">
+            <video id="video" width="640" height="400"></video>
+            <p>
+                <button onclick="shot()">Shot</button>
+            </p>
+        </div>
+        <div id="preview">
+            <canvas id="canvas"></canvas>
+            <p>
+                <button onclick="good()">Good</button>
+                <button onclick="back()">Not good</button>
+                <!-- <button onclick="save()">Save</button> -->
+            </p>
+        </div>
+        <div id="send">
+            <h1>Send to your email</h1>
+            <input type="email" id="email" placeholder="my email">
+            <button onclick="send()">Send</button>
+            <p id="message"></p>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>
