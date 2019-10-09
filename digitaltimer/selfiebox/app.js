@@ -30,6 +30,8 @@ f('container').addEventListener("click", function () {
     }
 });
 
+addKeyboard();
+
 setInterval(function () { animation() }, 1000);
 
 function shot(n) {
@@ -137,6 +139,38 @@ function select(n) {
         hide('preview');
         show('send');
     }
+}
+
+function addKeyboard() {
+    var s = '';
+    var layout = [
+        ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'DEL'],
+        ['Q', 'A', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '@GMAIL.COM'],
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '_', '-', '.', '@']
+    ];
+    for (var j = 0; j < layout.length; j++) {
+        var row = layout[j];
+        s += "<div>";
+        for (var i = 0; i < row.length; i++) {
+            s += "<button onclick=\"typing('" + row[i] + "')\">" + row[i] + "</button>\n";
+        }
+        s += "</div>";
+    }
+    f('keyboard').innerHTML = s;
+}
+
+function typing(n) {
+    var email = f('email').value;
+    if (n == 'DEL') {
+        if (email.length >= 1) {
+            email = email.substring(0, email.length - 1);
+        }
+
+    } else {
+        email += n;
+    }
+    f('email').value = email;
 }
 
 function send() {
