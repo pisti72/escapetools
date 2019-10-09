@@ -6,7 +6,7 @@ $decoded = json_decode($content, true);
 
 $mailto = $decoded['email'];
 $image = $decoded['image'];
-$filename = "reddot.png";
+$file_name = $decoded['filename'];
 $from_name = "SelfieBox";
 $from_mail = "noreply@morrisons2.hu";
 
@@ -15,7 +15,9 @@ $subject = "My amazing party in Morrisons";
 $htmlContent = "<h1>Ilyenek voltunk a Morrisonsban</h1><p>Ugye jól néztünk ki!</p>";
 $response['result'] = 'success';
 
-$success = mail_attachment($mailto, $from_mail, $from_name, $subject, $htmlContent, $image);
+save($file_name, $image);
+
+$success = mail_attachment($mailto, $from_mail, $from_name, $subject, $htmlContent, $image, $file_name);
 if (!$success) {
     $response['result'] = 'failed';
 }
@@ -23,17 +25,19 @@ if (!$success) {
 /* send back the result */
 echo json_encode($response);
 
+function save($file_name, $image)
+{
+    file_put_contents('pictures/' . $file_name, $image);
+}
+
 //Taken from: https://www.codexworld.com/send-email-with-attachment-php/
 
-function mail_attachment($mailto, $from_mail, $from_name, $subject, $htmlContent, $image)
+function mail_attachment($mailto, $from_mail, $from_name, $subject, $htmlContent, $image, $file_name)
 {
     $encoded_content = chunk_split($image);
 
-//attachment file path
-    $file = "party.jpg";
-
 //header for sender info
-    $headers = "From: $from_name" . " <" . $from_mail. ">";
+    $headers = "From: $from_name" . " <" . $from_mail . ">";
 
 //boundary
     $semi_rand = md5(time());
@@ -51,9 +55,9 @@ function mail_attachment($mailto, $from_mail, $from_name, $subject, $htmlContent
     $message .= "--{$mime_boundary}\n";
 
     $data = chunk_split($image);
-    $message .= "Content-Type: application/octet-stream; name=\"" . $file . "\"\n" .
-        "Content-Description: " . $file . "\n" .
-        "Content-Disposition: attachment;\n" . " filename=\"" . $file . "\";\n" .
+    $message .= "Content-Type: application/octet-stream; name=\"" . $file_name . "\"\n" .
+        "Content-Description: " . $file_name . "\n" .
+        "Content-Disposition: attachment;\n" . " filename=\"" . $file_name . "\";\n" .
         "Content-Transfer-Encoding: base64\n\n" . $data . "\n\n";
 
     $message .= "--{$mime_boundary}--";

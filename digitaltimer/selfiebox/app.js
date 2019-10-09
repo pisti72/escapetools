@@ -1,11 +1,14 @@
 const url = 'api.php';
 const STATE_WELCOME = 0;
-const STATE_SHOT = 1;
-const STATE_PREVIEW = 2;
-const STATE_SEND = 3;
+const STATE_COUNTDOWN = 1;
+const STATE_SHOT = 2;
+const STATE_PREVIEW = 3;
+const STATE_SEND = 4;
+const STATE_SENT = 5;
 var counter = 0;
+var countdown = 0;
 var state = STATE_WELCOME;
-var canvas = f('canvas');
+var canvas = [f('canvas0'), f('canvas1'), f('canvas2')];
 var video = f('video');
 var imageToSend = {};
 var promise = navigator.mediaDevices.getUserMedia({ video: true })
@@ -23,28 +26,20 @@ var promise = navigator.mediaDevices.getUserMedia({ video: true })
 
 f('container').addEventListener("click", function () {
     if (state == STATE_WELCOME) {
-        state = STATE_SHOT;
-        hide('welcome');
-        show('shot');
+        toCountdown();
     }
 });
 
 setInterval(function () { animation() }, 1000);
 
-function shot() {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx = canvas.getContext('2d');
+function shot(n) {
+    canvas[n].width = video.videoWidth;
+    canvas[n].height = video.videoHeight;
+    ctx = canvas[n].getContext('2d');
     ctx.drawImage(video, 0, 0);
     ctx.font = "30px Arial";
     ctx.fillStyle = "#fff";
-    ctx.fillText("www.morrisons2.hu", 10, 40);
-    imageToSend = canvas.toDataURL('image/jpeg', 0.8);
-    if (state == STATE_SHOT) {
-        state = STATE_PREVIEW;
-        hide('shot');
-        show('preview');
-    }
+    ctx.fillText("YOUR LOGO", 10, 40);
 }
 
 function good() {
@@ -81,12 +76,66 @@ function download(filename, image) {
 
 function animation() {
     counter++;
-    if (counter % 2 == 0) {
-        f('title_txt').innerHTML = 'Selfie box';
-        f('touch_txt').innerHTML = 'Touch the screen';
-    } else {
-        f('title_txt').innerHTML = 'Szelfi doboz';
-        f('touch_txt').innerHTML = 'Éríntsd meg a képernyőt';
+    if (state == STATE_WELCOME) {
+        if (counter % 2 == 0) {
+            f('title_txt').innerHTML = texts.en.title;
+            f('touch_txt').innerHTML = texts.en.touch;
+        } else {
+            f('title_txt').innerHTML = texts.hu.title;
+            f('touch_txt').innerHTML = texts.hu.touch;
+        }
+    } else if (state == STATE_COUNTDOWN) {
+        countdown++;
+        if (countdown >= texts.en.countdown.length) {
+            toShot();
+        }
+        f('number_txt').innerHTML = texts.en.countdown[countdown];
+    } else if (state == STATE_SHOT) {
+        shot(countdown);
+        countdown++;
+        if (countdown >= canvas.length) {
+            state = STATE_PREVIEW;
+            hide('shot');
+            show('preview');
+        }
+    }
+}
+
+function toCountdown() {
+    state = STATE_COUNTDOWN;
+    hide('welcome');
+    hide('preview');
+    show('countdown');
+    countdown = 0;
+    counter = 0;
+}
+
+function toShot() {
+    state = STATE_SHOT;
+    hide('countdown');
+    show('shot');
+    countdown = 0;
+}
+
+function toWelcome() {
+    state = STATE_WELCOME;
+    hide('send');
+    hide('sent');
+    show('welcome');
+}
+
+function toSending() {
+    state = STATE_SENT;
+    hide('send');
+    show('sent');
+}
+
+function select(n) {
+    imageToSend = canvas[n].toDataURL('image/jpeg', 0.8);
+    if (state == STATE_PREVIEW) {
+        state = STATE_SEND;
+        hide('preview');
+        show('send');
     }
 }
 
@@ -97,8 +146,11 @@ function send() {
 
 function sendmail(email, image) {
     var blob = image.replace('data:image/jpeg;base64,', '');
+    var d = new Date();
+    var filename = 'party_' + d.getTime() + '.jpg';
     var data = {
         email: email,
+        filename: filename,
         image: blob
     };
 
@@ -109,6 +161,7 @@ function sendmail(email, image) {
             'Content-Type': 'application/json'
         }
     }).then(function (response) {
+        toSending();
         f('message').innerHTML = 'Sending...';
         return response.json()
     }).then(function (json) {
@@ -121,11 +174,7 @@ function sendmail(email, image) {
         setTimeout(
             function () {
                 f('message').innerHTML = '';
-                if (state == STATE_SEND) {
-                    state = STATE_WELCOME;
-                    hide('send');
-                    show('welcome');
-                }
+                toWelcome();
             }, 4000);
     }).catch(function (error) {
         console.log(error);
