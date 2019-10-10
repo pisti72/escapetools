@@ -2,7 +2,7 @@ var texts = {
     en: {
         title: 'Selfie box',
         touch: 'Touch the screen',
-        countdown: ['3','2','1','&#9786;&#9786;&#9786;'],
+        countdown: ['3','2','1','&#9786;&#9786;&#9786;',''],
         email: 'Please type your email address',
         sending: 'Sending...',
 

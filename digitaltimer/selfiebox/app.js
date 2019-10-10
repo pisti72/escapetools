@@ -6,9 +6,10 @@ const STATE_PREVIEW = 3;
 const STATE_SEND = 4;
 const STATE_SENT = 5;
 var counter = 0;
-var countdown = 0;
+var countdown_number = 0;
+var shot_number = 0;
 var state = STATE_WELCOME;
-var canvas = [f('canvas0'), f('canvas1'), f('canvas2')];
+var canvas = [f('canvas0'), f('canvas1'), f('canvas2'), f('canvas3')];
 var video = f('video');
 var imageToSend = {};
 var promise = navigator.mediaDevices.getUserMedia({ video: true })
@@ -35,6 +36,7 @@ addKeyboard();
 setInterval(function () { animation() }, 1000);
 
 function shot(n) {
+    console.log('shot: ' + n);
     canvas[n].width = video.videoWidth;
     canvas[n].height = video.videoHeight;
     ctx = canvas[n].getContext('2d');
@@ -42,22 +44,6 @@ function shot(n) {
     ctx.font = "30px Arial";
     ctx.fillStyle = "#fff";
     ctx.fillText("YOUR LOGO", 10, 40);
-}
-
-function good() {
-    if (state == STATE_PREVIEW) {
-        state = STATE_SEND;
-        hide('preview');
-        show('send');
-    }
-}
-
-function back() {
-    if (state == STATE_PREVIEW) {
-        state = STATE_SHOT;
-        hide('preview');
-        show('shot');
-    }
 }
 
 function save() {
@@ -87,18 +73,24 @@ function animation() {
             f('touch_txt').innerHTML = texts.hu.touch;
         }
     } else if (state == STATE_COUNTDOWN) {
-        countdown++;
-        if (countdown >= texts.en.countdown.length) {
+        if (countdown_number >= texts.en.countdown.length - 1) {
             toShot();
         }
-        f('number_txt').innerHTML = texts.en.countdown[countdown];
+        f('countdown').innerHTML = texts.en.countdown[countdown_number];
+        countdown_number++;
     } else if (state == STATE_SHOT) {
-        shot(countdown);
-        countdown++;
-        if (countdown >= canvas.length) {
-            state = STATE_PREVIEW;
-            hide('shot');
-            show('preview');
+        if (counter % 4 == 0) {
+            shot(shot_number);
+            f('countdown').innerHTML = '&#128247;';
+            setInterval(function () {
+                f('countdown').innerHTML = '';
+            }, 500);
+            shot_number++;
+            if (shot_number >= canvas.length) {
+                state = STATE_PREVIEW;
+                hide('shot');
+                show('preview');
+            }
         }
     }
 }
@@ -107,23 +99,25 @@ function toCountdown() {
     state = STATE_COUNTDOWN;
     hide('welcome');
     hide('preview');
-    show('countdown');
-    countdown = 0;
+    show('shot');
+    countdown_number = 0;
     counter = 0;
 }
 
 function toShot() {
     state = STATE_SHOT;
-    hide('countdown');
-    show('shot');
-    countdown = 0;
+    shot_number = 0;
+    counter = 0;
 }
 
 function toWelcome() {
     state = STATE_WELCOME;
     hide('send');
     hide('sent');
+    hide('preview');
     show('welcome');
+    countdown_number = 0;
+    counter = 0;
 }
 
 function toSending() {
@@ -145,7 +139,7 @@ function addKeyboard() {
     var s = '';
     var layout = [
         ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'DEL'],
-        ['Q', 'A', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '@GMAIL.COM'],
         ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '_', '-', '.', '@']
     ];

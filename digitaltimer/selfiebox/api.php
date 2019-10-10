@@ -15,7 +15,7 @@ $subject = "My amazing party in Morrisons";
 $htmlContent = "<h1>Ilyenek voltunk a Morrisonsban</h1><p>Ugye jól néztünk ki!</p>";
 $response['result'] = 'success';
 
-save($file_name, $image);
+save($file_name, base64_decode($image));
 
 $success = mail_attachment($mailto, $from_mail, $from_name, $subject, $htmlContent, $image, $file_name);
 if (!$success) {

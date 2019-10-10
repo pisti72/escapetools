@@ -3,8 +3,8 @@
 
 <head>
     <title>Selfiebox</title>
+    <!-- <link rel="stylesheet" type="text/css" href="w3.css"> -->
     <link rel="stylesheet" type="text/css" href="style.css">
-
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -16,22 +16,25 @@
             <h1 id="title_txt"></h1>
             <h2 id="touch_txt"></h2>
         </div>
-        <div id="countdown">
-            <h1 id="number_txt"></h1>
-        </div>
         <div id="shot">
-            <video id="video" width="640" height="400"></video>
+            <video id="video" width="50%" height="auto"></video>
+            <h1 id="countdown"></h1>
         </div>
         <div id="preview">
-            <canvas id="canvas0" onclick="select(0)"></canvas>
-            <canvas id="canvas1" onclick="select(1)"></canvas>
-            <canvas id="canvas2" onclick="select(2)"></canvas>
-            <button onclick="toCountdown()">Cancel</button>
+            <div>
+                <canvas class="thumbnails" id="canvas0" onclick="select(0)"></canvas>
+                <canvas class="thumbnails" id="canvas1" onclick="select(1)"></canvas>
+            </div>
+            <div>
+                <canvas class="thumbnails" id="canvas2" onclick="select(2)"></canvas>
+                <canvas class="thumbnails" id="canvas3" onclick="select(3)"></canvas>
+            </div>
+            <button onclick="toWelcome()">Cancel</button>
         </div>
         <div id="send">
             <h1>Send to your email</h1>
             <input type="email" id="email" placeholder="my email">
-            <button onclick="send()">Send</button>
+            <button onclick="send()" style = "background-color: #4f4;">Send</button>
             <button onclick="toWelcome()">Cancel</button>
             <div id="keyboard"></div>
         </div>
