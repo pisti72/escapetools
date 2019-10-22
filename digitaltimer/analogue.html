@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0px;
+            background-image: url(assets/alice_rabbit_clock.jpg);
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+        #clock {
+            height: 100%;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .digit {
+            float: left;
+            /* background-color: magenta; */
+            width: 12%;
+            text-align: center;
+            font-size: 12vw;
+        }
+        .container_digit{
+            position: absolute;
+            top:30%;
+            left:30%;
+            padding: 1%;
+            border-radius: 20px;
+            text-align: center;
+            background-color: rgba(255,255,255,.8);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="assets/alice_clock.jpg" id="clock" />
+    </div>
+    <div class="container_digit">
+        <div class="digit">1</div>
+        <div class="digit">2</div>
+        <div class="digit">:</div>
+        <div class="digit">3</div>
+        <div class="digit">4</div>
+        <div class="digit">:</div>
+        <div class="digit">5</div>
+        <div class="digit">6</div>
+    </div>
+</body>
+
+</html>
