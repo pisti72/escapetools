@@ -8,7 +8,8 @@ $mysqli = new mysqli("localhost", "root", "", "remotetimer", "3306");
 
 /* check connection */
 if (mysqli_connect_errno()) {
-    printf("Connect failed: %s\n", mysqli_connect_error());
+    //printf("Connect failed: %s\n", mysqli_connect_error());
+    $response['result'] = 'failed';
     exit();
 } else {
     //printf("Connected");
@@ -20,10 +21,10 @@ called by timer
  */
 $response['result'] = 'failed';
 
-//called by control
+//called by control and timer at 1st
 if (isset($_GET['timer'])) {
     $token = $_GET['timer'];
-    $query = "SELECT name, command, timestring, color FROM remotetimer_timers WHERE token = '$token'";
+    $query = "SELECT name, command, timestring, color, style FROM remotetimer_timers WHERE token = '$token'";
     if ($result = $mysqli->query($query)) {
         /* fetch object array */
         if ($row = $result->fetch_row()) {
@@ -32,6 +33,7 @@ if (isset($_GET['timer'])) {
             $response['command'] = $row[1];
             $response['timestring'] = $row[2];
             $response['color'] = $row[3];
+            $response['style'] = $row[4];
             $result->close();
         } else {
             $response['result'] = 'failed';
@@ -66,6 +68,7 @@ if (isset($_GET['timestring'], $_GET['receivedcommand'], $_GET['color'], $_GET['
     }
 }
 
+//called by control
 if (isset($_GET['command'], $_GET['token'])) {
     $token = $_GET['token'];
     $command = $_GET['command'];

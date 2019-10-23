@@ -8,6 +8,16 @@
     src: url(assets/digit/Digit.TTF);
 }
 
+@font-face {
+    font-family: boingo;
+    src: url(assets/Boingo.ttf);
+}
+
+@font-face {
+    font-family: lacoruna;
+    src: url(assets/Lacoruna\ .otf);
+}
+
 body {
     background-color: white;
     color: black;
@@ -26,11 +36,18 @@ button {
     text-align: center;
 }
 
-#time {
+.theme_digital {
     color: red;
     font-family: digital2;
     font-size: 18vw;
     text-shadow: 0px 0px 20px red;
+}
+
+.theme_alice {
+    color: black;
+    background-color: white;
+    font-family: boingo;
+    font-size: 18vw;
 }
 
 #timestring {
@@ -61,4 +78,13 @@ button {
 }
 .bg-black {
     background-color: black;
+}
+.bg-white {
+    background-color: white;
+    background-image: url(assets/alice_bg.jpg);
+    background-size: no-repeat;
+}
+
+#newuser{
+    display:none;
 }

@@ -13,14 +13,15 @@
     <!-- Navbar -->
 
     <div class="w3-bar w3-left-align w3-small w3-light-blue">
-        <a href="#" class="w3-bar-item w3-button w3-padding-large"><img src="assets/logo_with_title.svg" height="50px"></a>
-        <div class="w3-bar-item w3-right w3-padding-large" title="My Account">
+        <a href="#" class="w3-bar-item w3-button w3-padding-large"><img src="assets/logo_with_title.svg"
+                height="50px"></a>
+        <div class="w3-bar-item w3-right w3-padding-large" title="My Account" id="login">
             <div class="w3-row">
                 <div class="w3-col m1 l2 w3-padding-small">
-                    <a href="#">Join</a>
+                    <button class="w3-button w3-round" onclick="newuser()">Join</button>
                 </div>
                 <div class="w3-col m5 l5 w3-padding-small">
-                    <input class="w3-input w3-border w3-round" type="text" placeholder="email">
+                    <input class="w3-input w3-border w3-round" type="email" placeholder="email">
                 </div>
                 <div class="w3-col m6 l5 w3-padding-small">
                     <input class="w3-input w3-border w3-round" type="password" placeholder="password">
@@ -28,6 +29,34 @@
             </div>
         </div>
     </div>
+
+    <!--Registration sheet-->
+    
+    <div id="newuser" class="w3-container w3-padding-large">
+        <div class="w3-card-4">
+            <div class="w3-container w3-green">
+                <h2>New user registration form</h2>
+            </div>
+
+            <div class="w3-container w3-padding-large">
+                <p>
+                    <label>User name:</label>
+                    <input class="w3-input w3-border w3-round" type="text" id="name">
+                </p>
+                <p>
+                    <label>Email:</label>
+                    <input class="w3-input w3-border w3-round" type="email" id="email">
+                </p>
+                <p>
+                    <label>Password</label>
+                    <input class="w3-input w3-border w3-round" type="password" id="password">
+                </p>
+                <button class="w3-button w3-blue w3-padding w3-round" onclick="register()">Register</button>
+                <button class="w3-button w3-blue w3-padding w3-round" onclick="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script src="user.js"></script>
 </body>
 
 </html>

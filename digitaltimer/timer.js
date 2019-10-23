@@ -10,7 +10,12 @@ var color = 'R';
 var paused = false;
 var pausedAt = 0;
 //setEndTime(60 * 60 + 1);
+setStyle();
 update();
+
+//f('time').className = 'theme_alice';
+
+document.body.className = 'bg-white';
 
 function checkServer() {
     if (counter % tick == 0) {
@@ -160,6 +165,14 @@ function getSixDigits(time) {
         ':' +
         getMillisecondsTen(time) +
         getMillisecondsOne(time);
+}
+
+function setStyle(){
+    fetch(api + '?timer=' + id).then(function (response) {
+        return response.json()
+    }).then(function (json) {
+        console.log(json.style);
+    });
 }
 
 function visible(n) {
