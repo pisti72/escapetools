@@ -16,23 +16,13 @@
         <a href="#" class="w3-bar-item w3-button w3-padding-large"><img src="assets/logo_with_title.svg"
                 height="50px"></a>
         <div class="w3-bar-item w3-right w3-padding-large" title="My Account" id="login">
-            <div class="w3-row">
-                <div class="w3-col m1 l2 w3-padding-small">
-                    <button class="w3-button w3-round" onclick="newuser()">Join</button>
-                </div>
-                <div class="w3-col m5 l5 w3-padding-small">
-                    <input class="w3-input w3-border w3-round" type="email" placeholder="email">
-                </div>
-                <div class="w3-col m6 l5 w3-padding-small">
-                    <input class="w3-input w3-border w3-round" type="password" placeholder="password">
-                </div>
-            </div>
+            <button class="w3-button w3-round" onclick="newuser()" id="join">Join</button>
+            <span id="logged_user">You are not logged in</span>
         </div>
     </div>
 
     <!--Registration sheet-->
-    
-    <div id="newuser" class="w3-container w3-padding-large">
+    <div id="newuser" class="w3-container w3-padding-large w3-half w3-display-middle">
         <div class="w3-card-4">
             <div class="w3-container w3-green">
                 <h2>New user registration form</h2>
@@ -56,6 +46,42 @@
             </div>
         </div>
     </div>
+
+    <!--Login sheet-->
+    <div id="loginuser" class="w3-container w3-padding-large w3-half w3-display-middle">
+        <div class="w3-card-4">
+            <div class="w3-container w3-green">
+                <h2>Login</h2>
+            </div>
+
+            <div class="w3-container w3-padding-large">
+                <p>
+                    <label>User name or email</label>
+                    <input class="w3-input w3-border w3-round" type="text" id="name2">
+                </p>
+                <p>
+                    <label>Password</label>
+                    <input class="w3-input w3-border w3-round" type="password" id="password2">
+                </p>
+                <p class="w3-panel w3-red" id="invalid_login">
+                    Wrong user name or password
+                </p>
+                <button class="w3-button w3-blue w3-padding w3-round" onclick="login2()">Login</button>
+
+                <!--
+                <button class="w3-button w3-blue w3-padding w3-round" onclick="cancel()">Cancel</button>
+                -->
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container" id="dashboard">
+        <h1>My timers</h1>
+        <ul id="timers">
+
+        </ul>
+    </div>
+
     <script src="user.js"></script>
 </body>
 

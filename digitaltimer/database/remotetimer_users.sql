@@ -25,38 +25,34 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `remotetimer_timers`
+-- Table structure for table `remotetimer_users`
 --
 
-CREATE TABLE `remotetimer_timers` (
+CREATE TABLE `remotetimer_users` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `command` varchar(20) NOT NULL,
-  `timestring` varchar(30) NOT NULL,
-  `color` varchar(30) NOT NULL,
-  `style` varchar(10) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `token` varchar(20) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `email` varchar(64) NOT NULL,
+  `token` varchar(64) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `remotetimer_timers`
+-- Dumping data for table `remotetimer_users`
 --
 
-INSERT INTO `remotetimer_timers` (`id`, `name`, `command`, `timestring`, `color`, `style`, `user_id`, `token`, `created_at`) VALUES
-(1, 'Kocka p&aacute;lya', 'NOPE', '44:55:74', 'B', 'D', 2, 'P3LSCD9R4MWGACHC', '2019-10-14 12:52:02'),
-(2, 'Al&iacute;z Csodaorsz&aacute;gban p&aacute;lya', 'NOPE', '38:27:31', 'G', 'A', 2, 'ALIZ4TSH9CK31LDF56', '2019-10-14 12:58:50'),
-(3, 'Teszt p&aacute;lya', 'NOPE', '00:00:00', 'R', 'D', 1, 'TESZT', '2019-10-14 12:58:50');
+INSERT INTO `remotetimer_users` (`id`, `name`, `password`, `email`, `token`, `created_at`) VALUES
+(1, 'Teszt Elek', '81dc9bdb52d04dc20036dbd8313ed055', 'istvan.szalontai12@gmail.com', 'd109220c50de4888', '2019-11-12 13:19:58'),
+(2, 'Mystique', '81dc9bdb52d04dc20036dbd8313ed055', 'szalontaymark@gmail.com', '0dd19440af641744', '2019-11-13 14:47:15');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `remotetimer_timers`
+-- Indexes for table `remotetimer_users`
 --
-ALTER TABLE `remotetimer_timers`
+ALTER TABLE `remotetimer_users`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -64,10 +60,10 @@ ALTER TABLE `remotetimer_timers`
 --
 
 --
--- AUTO_INCREMENT for table `remotetimer_timers`
+-- AUTO_INCREMENT for table `remotetimer_users`
 --
-ALTER TABLE `remotetimer_timers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `remotetimer_users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

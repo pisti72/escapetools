@@ -1,6 +1,6 @@
 const STATE_HALT = 0;
 const api = './api.php';
-const tick = 30;
+const tick = 5;
 var state = STATE_HALT;
 var endTime = 0;
 var counter = 0;
@@ -10,12 +10,17 @@ var color = 'R';
 var paused = false;
 var pausedAt = 0;
 //setEndTime(60 * 60 + 1);
-setStyle();
-update();
 
 //f('time').className = 'theme_alice';
+f('time').className = 'theme_digital';
 
-document.body.className = 'bg-white';
+//document.body.className = 'bg-white';
+init();
+
+function init(){
+    getStyle();
+    setInterval('update()',95);
+}
 
 function checkServer() {
     if (counter % tick == 0) {
@@ -153,7 +158,8 @@ function update() {
     checkServer();
     timeString = getSixDigits(time);
     f('time').innerHTML = timeString;
-    requestAnimationFrame(update);
+    setDigits(time);
+    //requestAnimationFrame(update);
 }
 
 function getSixDigits(time) {
@@ -167,11 +173,27 @@ function getSixDigits(time) {
         getMillisecondsOne(time);
 }
 
-function setStyle(){
+function setDigits(time){
+    f('d1').innerHTML = getMinutesTen(time);
+    f('d2').innerHTML = getMinutesOne(time);
+    f('d3').innerHTML = getSecondsTen(time);
+    f('d4').innerHTML = getSecondsOne(time);
+    f('d5').innerHTML = getMillisecondsTen(time);
+    f('d6').innerHTML = getMillisecondsOne(time);
+}
+
+function getStyle(){
     fetch(api + '?timer=' + id).then(function (response) {
         return response.json()
     }).then(function (json) {
-        console.log(json.style);
+        //console.log(json.style);
+        if(json.style == 'A'){
+            visible('alice_container');
+            hide('digit_container')
+        }else if(json.style == 'D'){
+            hide('alice_container');
+            visible('digit_container')
+        }
     });
 }
 

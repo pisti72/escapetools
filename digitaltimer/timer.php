@@ -14,8 +14,23 @@
 </head>
 
 <body class="bg-black">
-    <div id="container">
-        <div id="time"></div>
+    <div id="alice_container">
+        <div id="bg_alice"></div>
+        <div class="container_digits">
+            <div id="d1" class="digit_alice">1</div>
+            <div id="d2" class="digit_alice">2</div>
+            <div class="digit_alice">:</div>
+            <div id="d3" class="digit_alice">3</div>
+            <div id="d4" class="digit_alice">4</div>
+            <div class="digit_alice">:</div>
+            <div id="d5" class="digit_alice">5</div>
+            <div id="d6" class="digit_alice">6</div>
+        </div>
+    </div>
+    <div id="digit_container">
+        <div id="container">
+            <div id="time"></div>
+        </div>
     </div>
     <img id="connection" src="assets/sad_cloud_01.svg"/>
     <script>
