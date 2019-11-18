@@ -33,3 +33,10 @@ Following materials are needed:
 --------------------------------
 * TOTAL                96 K HUF
 
+# Circuit
+
+https://javatutorial.net/raspberry-pi-control-motor-speed
+
+ULN2003A - Darlington transistor
+
+
