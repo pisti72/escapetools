@@ -82,22 +82,12 @@ button {
     margin: 0px;
 }
 
-.bg-white {
-    background-color: white;
-    background-image: url(assets/alice_bg.jpg);
-    background-size: no-repeat;
-}
-
 #newuser {
     display: none;
 }
 
 #alice_container {
     display: none;
-}
-
-#digit_container {
-    /*display:none;*/
 }
 
 #bg_alice {

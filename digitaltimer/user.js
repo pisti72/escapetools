@@ -1,6 +1,18 @@
 const api = './api.php';
 var user = {};
 
+//init();
+
+function init() {
+  
+  f('loginuser').onsubmit = function (event) {
+    event.preventDefault();
+    return false;
+  }
+  
+  f('loginuser').onsubmit = login2();
+}
+
 function newuser() {
   visible('newuser');
   hide('login');
@@ -84,11 +96,15 @@ async function login2() {
 }
 
 function list_timers() {
-  var links = '';
+  var node = f('timers');
+  var card = f('card_template');
   for (var i = 0; i < user.timers.length; i++) {
-    links += '<li><a href="control.php?id=' + user.timers[i] + '" target="_blank">' + user.names[i] + '</a>';
+    var cln = card.cloneNode(true);
+    cln.getElementsByTagName('h2')[0].innerHTML = user.names[i];
+    cln.getElementsByTagName('p')[0].innerHTML = '<a href="control.php?id=' + user.timers[i] + '" target="_blank">Open control panel</a>';
+    node.appendChild(cln);
+    //links += '<li><a href="control.php?id=' + user.timers[i] + '" target="_blank">' + user.names[i] + '</a>';
   }
-  f('timers').innerHTML = links;
 }
 
 function visible(n) {
