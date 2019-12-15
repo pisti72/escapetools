@@ -31,7 +31,7 @@ Operations:
 * Add 5 minutes
 * others will come ...
 
-## Setup Kiosk
+## Kiosk setup on OrangePi Armbian
 
 On OrangePi:
 cd .config/lxsession/LXDE
@@ -48,7 +48,20 @@ sudo nano /etc/lightdm/lightdm.conf
 
 autologin-user={user}
 
+## Kiosk setup on Raspbian
+https://pi-store.com/pages/raspbian-jessie-kiosk-mode
 
+nano /home/pi/.config/lxsession/LXDE-pi/autostart
+
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+@xset s off
+@xset s noblank
+@xset -dpms
+@unclutter -idle 0 #Hide mouse cursor
+@chromium-browser --noerrdialogs --incognito --kiosk https://xtimer.eu/timer.php?id={ti$
 
 ## API
 
