@@ -35,18 +35,38 @@ Operations:
 
 On OrangePi:
 cd .config/lxsession/LXDE
+
 On RaspberryPi:
 cd .config/lxsession/LXDE-pi
 
+sudo apt-get install xdotool unclutter sed
+
 nano autostart
 
-chromium --noerrdialogs --incognito --kiosk https://xtimer.eu/timer.php?id={timer_token}
+@lxpanel --profile LXDE
 
-Setup autostart
+@pcmanfm --desktop --profile LXDE
 
-sudo nano /etc/lightdm/lightdm.conf
+@xscreensaver -no-splash
 
-autologin-user={user}
+@point-rpi
+
+@xset s off
+
+@xset s noblank
+
+@xset -dpms
+
+xset -dpms
+
+@unclutter -idle 0 #Hide mouse cursor
+
+@chromium-browser --noerrdialogs --disable-infobars --incognito --kiosk https://xtimer.eu/timer.php?id={timer_token}
+
+
+
+
+chromium --noerrdialogs --disable-infobars --incognito --kiosk https://xtimer.eu/timer.php?id={timer_token}
 
 ## Kiosk setup on Raspbian
 https://pi-store.com/pages/raspbian-jessie-kiosk-mode
@@ -54,18 +74,27 @@ https://pi-store.com/pages/raspbian-jessie-kiosk-mode
 nano /home/pi/.config/lxsession/LXDE-pi/autostart
 
 @lxpanel --profile LXDE-pi
+
 @pcmanfm --desktop --profile LXDE-pi
+
 @xscreensaver -no-splash
+
 @point-rpi
+
 @xset s off
+
 @xset s noblank
+
 @xset -dpms
+
 @unclutter -idle 0 #Hide mouse cursor
-@chromium-browser --noerrdialogs --incognito --kiosk https://xtimer.eu/timer.php?id={ti$
+
+@chromium-browser --noerrdialogs --disable-infobars --incognito --kiosk https://xtimer.eu/timer.php?id={ti$
 
 ## API
 
 ?getcommand={timer_token}
 return
+TBD
 
 
