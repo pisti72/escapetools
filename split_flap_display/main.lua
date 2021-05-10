@@ -5,10 +5,15 @@ function love.load()
     FIRE     = 3
     state = IDLE
     CONFIG = "config.dat"
+    SPEED_OF_FLAP = 5
+    BACK_TO_IDLE_SECS = 60
     success = love.window.setFullscreen(true)
+    love.graphics.setDefaultFilter("nearest","nearest")
     img = love.graphics.newImage("wall-murals-split-flap-display-illustration.jpg")
     snd = love.audio.newSource("split_flap_sound.ogg","static")
  
+    love.mouse.setVisible(false)
+
     position={
         x = 0,
         y = 0,
@@ -123,7 +128,7 @@ function drawString(txt)
 end
 
 function textMutator()
-    if t%20==0 and state==CHANGING then
+    if t%SPEED_OF_FLAP==0 and state==CHANGING then
         local hasChanged = false        
         local txt = ""
         for i=1,string.len(position.from) do
@@ -136,7 +141,7 @@ function textMutator()
         end
         if not hasChanged then
             state = SUSTAIN
-            t_sustain = 60
+            t_sustain = BACK_TO_IDLE_SECS
             snd:stop()
         end
         return txt
@@ -160,6 +165,7 @@ function love.keyreleased(key)
 	    success = love.window.setFullscreen(false)
         data = position.x.."/"..position.y.."/"..position.pix
         love.filesystem.write(CONFIG,data)
+	love.mouse.setVisible(true)
         love.window.close()
         love.event.quit()
     end
