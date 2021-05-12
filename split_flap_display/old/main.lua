@@ -1,14 +1,4 @@
 function love.load()
-    text_from = "NORWICH"
-    text_to   = "ROXFORT"
-
-    rpio = require 'rpio'
-    --local GPIO = require('periphery').GPIO
-    gpio = rpio(4)
-    gpio.set_direction('in')
-    -- Open GPIO /dev/gpiochip0 line 10 with input direction
-    --local gpio_in = GPIO("/dev/gpiochip0", 10, "in")
-
     IDLE     = 0
     CHANGING = 1
     SUSTAIN  = 2
@@ -16,14 +6,10 @@ function love.load()
     state = IDLE
     CONFIG = "config.dat"
     SPEED_OF_FLAP = 1
-    BACK_TO_IDLE_SECS = 60 * 15
-    CHANGE_LENGTH = 40
-    LETTER_WIDTH = 300
-    LETTER_HEIGHT = 512
-    ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!. :"
+    BACK_TO_IDLE_SECS = 60
     success = love.window.setFullscreen(true)
-    --love.graphics.setDefaultFilter("nearest","nearest")
-    img = love.graphics.newImage("all_letter.png")
+    love.graphics.setDefaultFilter("nearest","nearest")
+    img = love.graphics.newImage("wall-murals-split-flap-display-illustration.jpg")
     snd = love.audio.newSource("split_flap_sound.ogg","static")
  
     love.mouse.setVisible(false)
@@ -33,13 +19,14 @@ function love.load()
         y = 0,
         yd =0,
         xd = 0,
-        pix = 10,
+        pix = 30,
         pixd = 0,
         from = "NULL",
         to="NULL"
     }
-   
-    changetime = 0 
+    
+    text_from = "NORWICH"
+    text_to   = "ROXFORT"
 
     position.from = text_from
     position.to = text_from
@@ -58,35 +45,51 @@ function love.load()
         love.filesystem.write(CONFIG,data)
     end
 
-    letters={}    
-
-    local k=1
-    for j=0,1536,512 do
-        for i=0,2700,300 do
-            local letter={}
-            letter.x=i
-            letter.y=j
-            letter.chr=string.sub(ABC,k,k)
-            letter.quad = love.graphics.newQuad(i, j, LETTER_WIDTH, LETTER_HEIGHT, img:getDimensions())
-            table.insert(letters,letter)
-            k = k + 1
-        end
+    data={
+        {chr="A",x=10,y=315},
+        {chr="B",x=68,y=315},
+        {chr="C",x=127,y=315},
+        {chr="D",x=185,y=315},
+        {chr="E",x=244,y=315},
+        {chr="F",x=302,y=315},
+        {chr="G",x=361,y=315},
+        {chr="H",x=419,y=315},
+        {chr="I",x=478,y=315},
+        {chr="J",x=537,y=315},
+        {chr="K",x=10,y=409},
+        {chr="L",x=68,y=409},
+        {chr="M",x=127,y=409},
+        {chr="N",x=185,y=409},
+        {chr="O",x=244,y=409},
+        {chr="P",x=302,y=409},
+        {chr="Q",x=361,y=409},
+        {chr="R",x=419,y=409},
+        {chr="S",x=478,y=409},
+        {chr="T",x=537,y=409},
+        {chr="Y",x=10,y=503},
+        {chr="V",x=68,y=503},
+        {chr="W",x=127,y=503},
+        {chr="X",x=185,y=503},
+        {chr="Y",x=244,y=503},
+        {chr="Z",x=302,y=503},
+        {chr="U",x=478,y=201},
+        {chr=" ",x=185,y=201}
+    }
+    letters={}
+    for i = 1,#data do
+        a = {}
+        a.chr = data[i].chr
+        a.quad = love.graphics.newQuad(data[i].x, data[i].y, 58, 94, img:getDimensions())
+        table.insert(letters,a)
     end
-    
     t=0
     w=love.window.getMode()
 end
 
 function love.update(dt)
-    
-    if state==IDLE then
-	if gpio.read()==1 then
-	    state = FIRE
-	end
-    elseif state==FIRE then
+    if state==FIRE then
         snd:play()
         state = CHANGING
-        changetime=0
         position.to = text_to
     elseif state==SUSTAIN then
         t_sustain = t_sustain - dt
@@ -103,7 +106,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    
     love.graphics.push()
     love.graphics.scale(position.pix/10)
     txt = textMutator()
@@ -119,7 +121,7 @@ function drawString(txt)
     for i=1,string.len(txt) do
         for j=1,#letters do
             if string.sub(txt,i,i)==letters[j].chr then
-                love.graphics.draw(img, letters[j].quad, position.x+(i-1) * LETTER_WIDTH, position.y)
+                love.graphics.draw(img, letters[j].quad, position.x+(i-1)*58, position.y)
             end
         end
     end
@@ -130,14 +132,13 @@ function textMutator()
         local hasChanged = false        
         local txt = ""
         for i=1,string.len(position.from) do
-            if string.sub(position.from,i,i)==string.sub(position.to,i,i) and changetime > CHANGE_LENGTH then
+            if string.sub(position.from,i,i)==string.sub(position.to,i,i) then
                txt = txt..string.sub(position.from,i,i)
             else 
                txt = txt..getNextLetter(string.sub(position.from,i,i))
                 hasChanged = true
             end
         end
-        changetime = changetime + 1
         if not hasChanged then
             state = SUSTAIN
             t_sustain = BACK_TO_IDLE_SECS
@@ -150,7 +151,7 @@ function textMutator()
 end
 
 function getNextLetter(char)
-    local abc=ABC..ABC..ABC
+    local abc="ABCDEFGHIJKLMNOPQRSTUWXYZ ABCDEFGHIJKLMNOPQRSTUWXYZ "
     for i=1,string.len(abc) do
         if string.sub(abc,i,i)==char then
             return string.sub(abc,i+1,i+1)
@@ -184,24 +185,24 @@ end
 
 function love.keypressed(key)
     if key == "s" then
-        position.yd = 40
+        position.yd = 20
     end
     if key == "w" then
-        position.yd = -40
+        position.yd = -20
     end
     if key == "d" then
-		position.xd = 40
+		position.xd = 20
     end
     if key == "a" then
-	    position.xd = -40
+	    position.xd = -20
     end
     if key == "e" then
-		position.pixd = 2
+		position.pixd = 5
     end
     if key == "q" then
-	    position.pixd = -2
+	    position.pixd = -5
     end
     if key == "space" and state==IDLE then
-	state = FIRE
+	    state = FIRE
     end
 end
