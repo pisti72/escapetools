@@ -2,6 +2,11 @@ function love.load()
     text_from = "NORWICH"
     text_to   = "ROXFORT"
 
+    --local GPIO = require('periphery').GPIO
+    --local gpio = rpio(12)
+    -- Open GPIO /dev/gpiochip0 line 10 with input direction
+    --local gpio_in = GPIO("/dev/gpiochip0", 10, "in")
+
     IDLE     = 0
     CHANGING = 1
     SUSTAIN  = 2
