@@ -24,3 +24,5 @@ $ sudo luarocks install lua-periphery
 
 $ sudo luarocks install rpio
 
+( ExplainingComputers: Raspberry Pi: Using GPIO Inputs)[https://youtu.be/NAl-ULEattw]
+
