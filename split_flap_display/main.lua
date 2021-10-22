@@ -27,8 +27,9 @@ function love.load()
     success = love.window.setFullscreen(true)
     --love.graphics.setDefaultFilter("nearest","nearest")
     img = love.graphics.newImage("all_letter.png")
-    snd = love.audio.newSource("split_flap_sound.ogg","static")
- 
+    flap_snd = love.audio.newSource("split_flap_sound.ogg","static")
+    whitle_snd = love.audio.newSource("whistle_sound.ogg","static")
+
     love.mouse.setVisible(false)
 
     position={
@@ -41,8 +42,8 @@ function love.load()
         from = "NULL",
         to = "NULL"
     }
-   
-    changetime = 0 
+
+    changetime = 0
 
     position.from = text_from
     position.to = text_from
@@ -61,7 +62,7 @@ function love.load()
         love.filesystem.write(CONFIG,data)
     end
 
-    letters={}    
+    letters={}
 
     local k=1
     for j=0,1536,512 do
@@ -75,7 +76,7 @@ function love.load()
             k = k + 1
         end
     end
-    
+
     t=0
     w=love.window.getMode()
 end
@@ -86,11 +87,11 @@ function gpio_setup()
 end
 
 function love.update(dt)
-    
+
     if state==IDLE then
 	    pcall(gpio_check)
     elseif state==FIRE then
-        snd:play()
+        flap_snd:play()
         state = CHANGING
         changetime=0
         position.to = text_to
@@ -115,7 +116,7 @@ function gpio_check()
 end
 
 function love.draw()
-    
+
     love.graphics.push()
     love.graphics.scale(position.pix/10)
     txt = textMutator()
@@ -124,7 +125,7 @@ function love.draw()
     love.graphics.pop()
     if state==SUSTAIN then
         love.graphics.print(math.floor(t_sustain),0,0)
-    end    
+    end
 end
 
 function drawString(txt)
@@ -139,12 +140,12 @@ end
 
 function textMutator()
     if t%SPEED_OF_FLAP==0 and state==CHANGING then
-        local hasChanged = false        
+        local hasChanged = false
         local txt = ""
         for i=1,string.len(position.from) do
             if string.sub(position.from,i,i)==string.sub(position.to,i,i) and changetime > CHANGE_LENGTH then
                txt = txt..string.sub(position.from,i,i)
-            else 
+            else
                txt = txt..getNextLetter(string.sub(position.from,i,i))
                 hasChanged = true
             end
@@ -153,7 +154,8 @@ function textMutator()
         if not hasChanged then
             state = SUSTAIN
             t_sustain = BACK_TO_IDLE_SECS
-            snd:stop()
+            flap_snd:stop()
+            whistle_snd:play()
         end
         return txt
     else
