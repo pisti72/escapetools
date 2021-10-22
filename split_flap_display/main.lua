@@ -3,11 +3,12 @@ function love.load()
     text_to   = "ROXFORT"
 
     rpio = require 'rpio'
-    --local GPIO = require('periphery').GPIO
-    gpio = rpio(4)
-    gpio.set_direction('in')
-    -- Open GPIO /dev/gpiochip0 line 10 with input direction
-    --local gpio_in = GPIO("/dev/gpiochip0", 10, "in")
+    
+    if pcall(gpio_setup) then
+        print("success")    
+    else
+        print("error")
+    end
 
     IDLE     = 0
     CHANGING = 1
@@ -15,7 +16,9 @@ function love.load()
     FIRE     = 3
     state = IDLE
     CONFIG = "config.dat"
-    SPEED_OF_FLAP = 1
+
+    SPEED_OF_FLAP = 5
+
     BACK_TO_IDLE_SECS = 60 * 15
     CHANGE_LENGTH = 40
     LETTER_WIDTH = 300
@@ -36,7 +39,7 @@ function love.load()
         pix = 10,
         pixd = 0,
         from = "NULL",
-        to="NULL"
+        to = "NULL"
     }
    
     changetime = 0 
@@ -77,12 +80,15 @@ function love.load()
     w=love.window.getMode()
 end
 
+function gpio_setup()
+    gpio = rpio(4)
+    gpio.set_direction('in')
+end
+
 function love.update(dt)
     
     if state==IDLE then
-	if gpio.read()==1 then
-	    state = FIRE
-	end
+	    pcall(gpio_check)
     elseif state==FIRE then
         snd:play()
         state = CHANGING
@@ -100,6 +106,12 @@ function love.update(dt)
     position.x = position.x + position.xd * dt
     position.pix = position.pix + position.pixd * dt
     t=t+1
+end
+
+function gpio_check()
+    if gpio.read()==1 then
+	    state = FIRE
+	end
 end
 
 function love.draw()
