@@ -1,0 +1,10 @@
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+@xset s off
+@xset s noblank
+@xset -dpms
+@firefox-esr --kiosk --private-window https://remotetimer.eu/timer.php?id=ALIZ4TSH9CK31LDF56
+
+

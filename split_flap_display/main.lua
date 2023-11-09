@@ -1,14 +1,11 @@
-function love.load()
-    text_from = "NORWICH"
-    text_to   = "ROXFORT"
+local GPIO = require('periphery').GPIO
 
-    rpio = require 'rpio'
-    
-    if pcall(gpio_setup) then
-        print("success")    
-    else
-        print("error")
-    end
+
+function love.load()
+    text_from = "CANTERBURY"
+    text_to   = "MAGICASTLE"
+
+    gpio_4 = GPIO(4,"in")
 
     IDLE     = 0
     CHANGING = 1
@@ -16,20 +13,17 @@ function love.load()
     FIRE     = 3
     state = IDLE
     CONFIG = "config.dat"
-
-    SPEED_OF_FLAP = 5
-
+    SPEED_OF_FLAP = 1
     BACK_TO_IDLE_SECS = 60 * 15
     CHANGE_LENGTH = 40
-    LETTER_WIDTH = 300
-    LETTER_HEIGHT = 512
+    LETTER_WIDTH = 150
+    LETTER_HEIGHT = 256
     ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!. :"
     success = love.window.setFullscreen(true)
-    --love.graphics.setDefaultFilter("nearest","nearest")
-    img = love.graphics.newImage("all_letter.png")
+    img = love.graphics.newImage("all_letter_1500x1024.png")
     flap_snd = love.audio.newSource("split_flap_sound.ogg","static")
-    whitle_snd = love.audio.newSource("whistle_sound.ogg","static")
-
+    whistle_snd = love.audio.newSource("whistle_sound.ogg","static")
+ 
     love.mouse.setVisible(false)
 
     position={
@@ -40,10 +34,10 @@ function love.load()
         pix = 10,
         pixd = 0,
         from = "NULL",
-        to = "NULL"
+        to="NULL"
     }
-
-    changetime = 0
+   
+    changetime = 0 
 
     position.from = text_from
     position.to = text_from
@@ -62,11 +56,11 @@ function love.load()
         love.filesystem.write(CONFIG,data)
     end
 
-    letters={}
+    letters={}    
 
     local k=1
-    for j=0,1536,512 do
-        for i=0,2700,300 do
+    for j=0,1024-LETTER_HEIGHT,LETTER_HEIGHT do
+        for i=0,1500-LETTER_WIDTH,LETTER_WIDTH do
             local letter={}
             letter.x=i
             letter.y=j
@@ -76,20 +70,18 @@ function love.load()
             k = k + 1
         end
     end
-
+    
     t=0
     w=love.window.getMode()
 end
 
-function gpio_setup()
-    gpio = rpio(4)
-    gpio.set_direction('in')
-end
-
 function love.update(dt)
-
+    
     if state==IDLE then
-	    pcall(gpio_check)
+	local sign = gpio_4:read()
+	if sign then
+	    state = FIRE
+	end
     elseif state==FIRE then
         flap_snd:play()
         state = CHANGING
@@ -109,14 +101,8 @@ function love.update(dt)
     t=t+1
 end
 
-function gpio_check()
-    if gpio.read()==1 then
-	    state = FIRE
-	end
-end
-
 function love.draw()
-
+    
     love.graphics.push()
     love.graphics.scale(position.pix/10)
     txt = textMutator()
@@ -126,6 +112,7 @@ function love.draw()
     if state==SUSTAIN then
         love.graphics.print(math.floor(t_sustain),0,0)
     end
+    --love.graphics.draw(img,0,0)
 end
 
 function drawString(txt)
@@ -140,12 +127,12 @@ end
 
 function textMutator()
     if t%SPEED_OF_FLAP==0 and state==CHANGING then
-        local hasChanged = false
+        local hasChanged = false        
         local txt = ""
         for i=1,string.len(position.from) do
             if string.sub(position.from,i,i)==string.sub(position.to,i,i) and changetime > CHANGE_LENGTH then
                txt = txt..string.sub(position.from,i,i)
-            else
+            else 
                txt = txt..getNextLetter(string.sub(position.from,i,i))
                 hasChanged = true
             end
@@ -175,7 +162,7 @@ end
 
 function love.keyreleased(key)
     if key == "escape" then
-	    success = love.window.setFullscreen(false)
+	success = love.window.setFullscreen(false)
         data = position.x.."/"..position.y.."/"..position.pix
         love.filesystem.write(CONFIG,data)
 	love.mouse.setVisible(true)
@@ -183,15 +170,15 @@ function love.keyreleased(key)
         love.event.quit()
     end
     if key == "s" or key == "w" then
-	    position.yd = 0
+	position.yd = 0
         position.y = math.floor(position.y)
     end
     if key == "a" or key == "d" then
-	    position.xd = 0
+	position.xd = 0
         position.x = math.floor(position.x)
     end
     if key == "q" or key == "e" then
-	    position.pixd = 0
+	position.pixd = 0
         position.pix = math.floor(position.pix*10)/10
     end
 end
@@ -204,16 +191,16 @@ function love.keypressed(key)
         position.yd = -40
     end
     if key == "d" then
-		position.xd = 40
+	position.xd = 40
     end
     if key == "a" then
-	    position.xd = -40
+	position.xd = -40
     end
     if key == "e" then
-		position.pixd = 2
+	position.pixd = 2
     end
     if key == "q" then
-	    position.pixd = -2
+	position.pixd = -2
     end
     if key == "space" and state==IDLE then
 	state = FIRE
