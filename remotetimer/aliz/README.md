@@ -17,3 +17,24 @@ touch autostart
 ls
 sudo apt-get install xdotool unclutter sed
 
+# history
+
+2020-05-27 creation of aliz
+
+2023-11-09 aliz repairing
+
+- housing                    1.880
+- new micro sd 32gb card     1.850
+- installation              12.000 x 1
+---------------------------------------
+- total                     15.730
+
+2023-11-09 train repairing
+
+- housing                    1.880
+- new micro sd 32gb card     1.850
+- installation              12.000 x 3
+- calibration               12.000 x 1
+---------------------------------------
+- total                     39.730
+

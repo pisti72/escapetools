@@ -4,9 +4,11 @@ local GPIO = require('periphery').GPIO
 function love.load()
     text_from = "CANTERBURY"
     text_to   = "MAGICASTLE"
-
-    gpio_4 = GPIO(4,"in")
-
+    is_gpio = false
+    if pcall(gpio_setup) then
+        is_gpio = true
+    end
+    
     IDLE     = 0
     CHANGING = 1
     SUSTAIN  = 2
@@ -14,7 +16,7 @@ function love.load()
     state = IDLE
     CONFIG = "config.dat"
     SPEED_OF_FLAP = 1
-    BACK_TO_IDLE_SECS = 60 * 15
+    BACK_TO_IDLE_SECS = 2
     CHANGE_LENGTH = 40
     LETTER_WIDTH = 150
     LETTER_HEIGHT = 256
@@ -75,19 +77,34 @@ function love.load()
     w=love.window.getMode()
 end
 
+function gpio_setup()
+    gpio_4 = GPIO(4,"in")
+end
+
 function love.update(dt)
-    
     if state==IDLE then
-	local sign = gpio_4:read()
-	if sign then
-	    state = FIRE
-	end
+        local sign = false
+        if is_gpio then
+            sign = gpio_4:read()
+        end
+        if love.keyboard.isDown("space") or sign then
+            state = FIRE
+        end
+        
     elseif state==FIRE then
         flap_snd:play()
         state = CHANGING
         changetime=0
         position.to = text_to
     elseif state==SUSTAIN then
+        local sign = false
+        if is_gpio then
+            sign = gpio_4:read()
+        end
+        if love.keyboard.isDown("space") or sign then
+            t_sustain = BACK_TO_IDLE_SECS
+        end
+        
         t_sustain = t_sustain - dt
         if t_sustain <= 0 then
             position.from = text_from
@@ -110,7 +127,7 @@ function love.draw()
     drawString(txt)
     love.graphics.pop()
     if state==SUSTAIN then
-        love.graphics.print(math.floor(t_sustain),0,0)
+        --love.graphics.print(math.floor(t_sustain),0,0)
     end
     --love.graphics.draw(img,0,0)
 end
@@ -162,23 +179,23 @@ end
 
 function love.keyreleased(key)
     if key == "escape" then
-	success = love.window.setFullscreen(false)
+        success = love.window.setFullscreen(false)
         data = position.x.."/"..position.y.."/"..position.pix
         love.filesystem.write(CONFIG,data)
-	love.mouse.setVisible(true)
+        love.mouse.setVisible(true)
         love.window.close()
         love.event.quit()
     end
     if key == "s" or key == "w" then
-	position.yd = 0
+        position.yd = 0
         position.y = math.floor(position.y)
     end
     if key == "a" or key == "d" then
-	position.xd = 0
+        position.xd = 0
         position.x = math.floor(position.x)
     end
     if key == "q" or key == "e" then
-	position.pixd = 0
+        position.pixd = 0
         position.pix = math.floor(position.pix*10)/10
     end
 end
@@ -191,18 +208,15 @@ function love.keypressed(key)
         position.yd = -40
     end
     if key == "d" then
-	position.xd = 40
+	    position.xd = 40
     end
     if key == "a" then
-	position.xd = -40
+	    position.xd = -40
     end
     if key == "e" then
-	position.pixd = 2
+	    position.pixd = 2
     end
     if key == "q" then
-	position.pixd = -2
-    end
-    if key == "space" and state==IDLE then
-	state = FIRE
+	    position.pixd = -2
     end
 end
