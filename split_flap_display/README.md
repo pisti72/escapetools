@@ -76,5 +76,6 @@ nano autostart
 ```
 love /home/pi/Documents/escapetools/split_flap_display/
 ```
-    Mentés a CTRL+O -val. Az autostart név marad. ENTER. Majd CTRL+X -el kilépés.
+
+14. Mentés a CTRL+O -val. Az autostart név marad. ENTER. Majd CTRL+X -el kilépés.
 
